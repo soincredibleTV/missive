@@ -31,25 +31,43 @@
 
     <script>
 
-		logMessage('Testing logMessage function');
 
-        // Initialize Missive API and get the active conversation
-        Missive.on('ready', () => {
-			    console.log('Missive API is ready.'); // Перевірка в консоль
-
-            logMessage('Missive API is ready.');
-            getActiveConversation();
-        });
-		
-
-		
-		        // Function to log messages to the page
+   // Function to log messages to the page
         function logMessage(message) {
             const logContainer = document.getElementById('log');
             const newLogEntry = document.createElement('p');
             newLogEntry.textContent = message;
             logContainer.appendChild(newLogEntry);
         }
+	    
+	logMessage('Testing logMessage function');
+
+Missive.on('conversationSelected', (conversation) => {
+                if (conversation && conversation.id) {
+                    logMessage('Active conversation ID: ' + conversation.id);
+                    fetchSmartSuiteRecords(conversation.id); // Call SmartSuite API with conversation ID
+                } else {
+                    logMessage('No active conversation found.');
+                }
+}
+
+        Missive.on('change:conversations', (ids) => {
+            logEvent('Conversations changed: ' + JSON.stringify(ids));
+        });       
+
+
+
+
+	   // Initialize Missive API and get the active conversation
+        Missive.on('ready', () => {
+	    console.log('Missive API is ready.'); // Перевірка в консоль
+            logMessage('Missive API is ready.');
+            getActiveConversation();
+        });
+		
+
+		
+
 
         
         // Fetch active conversation using Missive API
