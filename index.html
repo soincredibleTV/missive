@@ -49,7 +49,7 @@ Missive.on('conversationSelected', (conversation) => {
                 } else {
                     logMessage('No active conversation found.');
                 }
-}
+            });
 
         Missive.on('change:conversations', (ids) => {
             logEvent('Conversations changed: ' + JSON.stringify(ids));
