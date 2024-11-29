@@ -48,12 +48,15 @@
   Missive.fetchConversations(ids).then((conversations) => {
     if (conversations.length != 1) {
 		logMessage('Do nothing');
+		 console.log('Do nothing:')
       // Do nothing if multiple conversations are selected.
       return
     }
 
     var conversationid = conversations[0].Id
 	logMessage('Active conversation ID: ' + conversationid);
+	console.log('Active conversation ID: ' + conversationid)
+
           return
 	
      })
