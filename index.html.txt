@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missive Integration Example</title>
+    <!-- Missive API and Styles -->
+    <script src="https://integrations.missiveapp.com/missive.js"></script>
+    <link rel="stylesheet" href="https://integrations.missiveapp.com/missive.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            text-align: center;
+        }
+        .log {
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Missive iFrame Integration</h1>
+    <p>This page demonstrates a basic integration with Missive.</p>
+    <div class="log" id="log">
+        <strong>Event log:</strong>
+    </div>
+
+    <script>
+        // Function to log events to the page
+        function logEvent(message) {
+            const logContainer = document.getElementById('log');
+            const newLogEntry = document.createElement('p');
+            newLogEntry.textContent = message;
+            logContainer.appendChild(newLogEntry);
+        }
+
+        // Listening to conversation changes in Missive
+        Missive.on('change:conversations', (ids) => {
+            logEvent('Conversations changed: ' + JSON.stringify(ids));
+        });
+
+        // Example of fetching and logging conversations
+        Missive.on('ready', () => {
+            logEvent('Missive API is ready.');
+            Missive.fetchConversations().then(conversations => {
+                logEvent('Fetched conversations: ' + JSON.stringify(conversations));
+            });
+        });
+    </script>
+</body>
+</html>
