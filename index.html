@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Missive Integration Example</title>
-    <!-- Missive API and Styles -->
+    <title>Missive API and SmartSuite Integration</title>
     <script src="https://integrations.missiveapp.com/missive.js"></script>
-    <link rel="stylesheet" href="https://integrations.missiveapp.com/missive.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -25,32 +23,82 @@
     </style>
 </head>
 <body>
-    <h1>Missive iFrame Integration</h1>
-    <p>This page demonstrates a basic integration with Missive.</p>
+    <h1>SmartSuite and Missive API Integration</h1>
+    <p>Fetching conversation status automatically from SmartSuite through Missive API.</p>
     <div class="log" id="log">
         <strong>Event log:</strong>
     </div>
 
     <script>
-        // Function to log events to the page
-        function logEvent(message) {
+        // Function to log messages to the page
+        function logMessage(message) {
             const logContainer = document.getElementById('log');
             const newLogEntry = document.createElement('p');
             newLogEntry.textContent = message;
             logContainer.appendChild(newLogEntry);
         }
 
-        // Listening to conversation changes in Missive
-        Missive.on('change:conversations', (ids) => {
-            logEvent('Conversations changed: ' + JSON.stringify(ids));
-        });
+        // Function to fetch and log records from SmartSuite
+        async function fetchSmartSuiteRecords(conversationId) {
+            try {
+                // Create filter for SmartSuite API request
+                const filter = {
+                    "filter": {
+                        "operator": "and",
+                        "fields": [
+                            {
+                                "field": "s6774ee5f9", // ID field for conversationId
+                                "comparison": "is",
+                                "value": conversationId
+                            }
+                        ]
+                    }
+                };
 
-        // Example of fetching and logging conversations
-        Missive.on('ready', () => {
-            logEvent('Missive API is ready.');
-            Missive.fetchConversations().then(conversations => {
-                logEvent('Fetched conversations: ' + JSON.stringify(conversations));
+                // Define Table Id for the SmartSuite request
+                const tableId = '64bea2c89335ca76865eedef';  // Replace with your actual table ID
+                const url = `https://app.smartsuite.com/api/v1/applications/${tableId}/records/list/`;
+
+                // Execute the request to SmartSuite API with filter
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer 17dbd563f796999c7a3e61a9c7d333931550572a',  // Replace with your actual API token
+                        'Content-Type': 'application/json',
+                        'Account-Id': 'sg1uylnz'
+                    },
+                    body: JSON.stringify(filter) // Send the filter as JSON in the body
+                });
+
+                // Check if the response is successful
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                logMessage('SmartSuite Records: ' + JSON.stringify(data)); // Log response data
+
+            } catch (error) {
+                logMessage('Error fetching SmartSuite records: ' + error.message);
+            }
+        }
+
+        // Fetch active conversation using Missive API
+        function getActiveConversation() {
+            Missive.on('conversationSelected', (conversation) => {
+                if (conversation && conversation.id) {
+                    logMessage('Active conversation ID: ' + conversation.id);
+                    fetchSmartSuiteRecords(conversation.id); // Call SmartSuite API with conversation ID
+                } else {
+                    logMessage('No active conversation found.');
+                }
             });
+        }
+
+        // Initialize Missive API and get the active conversation
+        Missive.on('ready', () => {
+            logMessage('Missive API is ready.');
+            getActiveConversation();
         });
     </script>
 </body>
