@@ -30,26 +30,79 @@
     </div>
 
     <script>
-	
-	Missive.on('change:conversations', (ids) => {
-  Missive.fetchConversations(ids).then((conversations) => {
-    if (conversations.length != 1) {
-      // Do nothing if multiple conversations are selected.
-      return
-    }
 
-    var message = conversations[0].latest_message
-    if (!message || !message.from_field) {
-      // Do nothing if conversation has no message (only chat comments) or if
-      // message has no From field.
-      return
-    }
 
-    var from = message.from_field
-    console.log('Message from:', from.name, from.address)
-    console.log('Message subject:', message.subject)
-  })
-})
+   // Function to log messages to the page
+        function logMessage(message) {
+            const logContainer = document.getElementById('log');
+            const newLogEntry = document.createElement('p');
+            newLogEntry.textContent = message;
+            logContainer.appendChild(newLogEntry);
+        }
+	    
+	logMessage('Testing logMessage function');
+
+
+
+  getActiveConversation();
+
+        
+        // Fetch active conversation using Missive API
+        function getActiveConversation() {
+            Missive.on('conversationSelected', (conversation) => {
+                if (conversation && conversation.id) {
+                    logMessage('Active conversation ID: ' + conversation.id);
+                    fetchSmartSuiteRecords(conversation.id); // Call SmartSuite API with conversation ID
+                } else {
+                    logMessage('No active conversation found.');
+                }
+            });
+        }
+		
+		// Function to fetch and log records from SmartSuite
+        async function fetchSmartSuiteRecords(conversationid) {
+            try {
+                // Create filter for SmartSuite API request
+                const filter = {
+                    "filter": {
+                        "operator": "and",
+                        "fields": [
+                            {
+                                "field": "s6774ee5f9", // ID field for conversationid
+                                "comparison": "is",
+                                "value": conversationid
+                            }
+                        ]
+                    }
+                };
+
+                // Define Table Id for the SmartSuite request
+                const tableId = '64bea2c89335ca76865eedef';  // Replace with your actual table ID
+                const url = `https://app.smartsuite.com/api/v1/applications/${tableId}/records/list/`;
+
+                // Execute the request to SmartSuite API with filter
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer 17dbd563f796999c7a3e61a9c7d333931550572a',  // Replace with your actual API token
+                        'Content-Type': 'application/json',
+                        'Account-Id': 'sg1uylnz'
+                    },
+                    body: JSON.stringify(filter) // Send the filter as JSON in the body
+                });
+
+                // Check if the response is successful
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                logMessage('SmartSuite Records: ' + JSON.stringify(data)); // Log response data
+
+            } catch (error) {
+                logMessage('Error fetching SmartSuite records: ' + error.message);
+            }
+        }
     </script>
 </body>
 </html>
