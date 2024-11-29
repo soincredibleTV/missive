@@ -53,7 +53,7 @@
       return
     }
 
-    var conversationid = conversations[0].id
+    var conversationid = conversations[0].Id
 	logMessage('Active conversation ID: ' + conversationid);
 	console.log('Active conversation ID: ' + conversationid)
 
@@ -66,20 +66,11 @@
 
 
 
-  getActiveConversation();
-
-        
-        // Fetch active conversation using Missive API
-        function getActiveConversation() {
-            Missive.on('conversationSelected', (conversation) => {
-                if (conversation && conversation.id) {
-                    logMessage('Active conversation ID: ' + conversation.id);
-                    fetchSmartSuiteRecords(conversation.id); // Call SmartSuite API with conversation ID
-                } else {
-                    logMessage('No active conversation found.');
-                }
-            });
-        }
+        	
+		
+		
+		fetchSmartSuiteRecords(conversationid);
+		
 		
 		// Function to fetch and log records from SmartSuite
         async function fetchSmartSuiteRecords(conversationid) {
@@ -97,10 +88,11 @@
                         ]
                     }
                 };
-
+				
+	logMessage('SS_filter');
+	console.log('SS_filter')
                 // Define Table Id for the SmartSuite request
-                const tableId = '64bea2c89335ca76865eedef';  // Replace with your actual table ID
-                const url = `https://app.smartsuite.com/api/v1/applications/${tableId}/records/list/`;
+                const url = `https://app.smartsuite.com/api/v1/applications/64bea2c89335ca76865eedef/records/list/`;
 
                 // Execute the request to SmartSuite API with filter
                 const response = await fetch(url, {
@@ -112,6 +104,8 @@
                     },
                     body: JSON.stringify(filter) // Send the filter as JSON in the body
                 });
+					logMessage('SS_requested');
+					console.log('SS_requested')
 
                 // Check if the response is successful
                 if (!response.ok) {
