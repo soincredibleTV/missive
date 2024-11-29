@@ -44,6 +44,23 @@
 
 
 
+	Missive.on('change:conversations', (ids) => {
+  Missive.fetchConversations(ids).then((conversations) => {
+    if (conversations.length != 1) {
+      // Do nothing if multiple conversations are selected.
+      return
+    }
+
+    var conversationid = conversations[0].Id
+          return
+	logMessage('Active conversation ID: ' + conversationid);
+     })
+})
+
+
+
+
+
   getActiveConversation();
 
         
