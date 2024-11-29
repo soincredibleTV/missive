@@ -53,9 +53,10 @@
       return
     }
 
-    var conversationid = conversations[0].Id
+    var conversationid = conversations[0].id
 	logMessage('Active conversation ID: ' + conversationid);
 	console.log('Active conversation ID: ' + conversationid)
+	fetchSmartSuiteRecords(conversationid);
 
           return
 	
