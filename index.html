@@ -30,7 +30,16 @@
     </div>
 
     <script>
-        // Function to log messages to the page
+
+		
+
+        // Initialize Missive API and get the active conversation
+        Missive.on('ready', () => {
+            logMessage('Missive API is ready.');
+            getActiveConversation();
+        });
+		
+		        // Function to log messages to the page
         function logMessage(message) {
             const logContainer = document.getElementById('log');
             const newLogEntry = document.createElement('p');
@@ -38,8 +47,21 @@
             logContainer.appendChild(newLogEntry);
         }
 
-        // Function to fetch and log records from SmartSuite
-        async function fetchSmartSuiteRecords(conversationId) {
+        
+        // Fetch active conversation using Missive API
+        function getActiveConversation() {
+            Missive.on('conversationSelected', (conversation) => {
+                if (conversation && conversation.id) {
+                    logMessage('Active conversation ID: ' + conversation.id);
+                    fetchSmartSuiteRecords(conversation.id); // Call SmartSuite API with conversation ID
+                } else {
+                    logMessage('No active conversation found.');
+                }
+            });
+        }
+		
+		// Function to fetch and log records from SmartSuite
+        async function fetchSmartSuiteRecords(conversation.id) {
             try {
                 // Create filter for SmartSuite API request
                 const filter = {
@@ -47,9 +69,9 @@
                         "operator": "and",
                         "fields": [
                             {
-                                "field": "s6774ee5f9", // ID field for conversationId
+                                "field": "s6774ee5f9", // ID field for conversation.id
                                 "comparison": "is",
-                                "value": conversationId
+                                "value": conversation.id
                             }
                         ]
                     }
@@ -82,24 +104,6 @@
                 logMessage('Error fetching SmartSuite records: ' + error.message);
             }
         }
-
-        // Fetch active conversation using Missive API
-        function getActiveConversation() {
-            Missive.on('conversationSelected', (conversation) => {
-                if (conversation && conversation.id) {
-                    logMessage('Active conversation ID: ' + conversation.id);
-                    fetchSmartSuiteRecords(conversation.id); // Call SmartSuite API with conversation ID
-                } else {
-                    logMessage('No active conversation found.');
-                }
-            });
-        }
-
-        // Initialize Missive API and get the active conversation
-        Missive.on('ready', () => {
-            logMessage('Missive API is ready.');
-            getActiveConversation();
-        });
     </script>
 </body>
 </html>
