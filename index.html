@@ -61,7 +61,7 @@
         }
 		
 		// Function to fetch and log records from SmartSuite
-        async function fetchSmartSuiteRecords(conversation.id) {
+        async function fetchSmartSuiteRecords(conversationid) {
             try {
                 // Create filter for SmartSuite API request
                 const filter = {
@@ -69,9 +69,9 @@
                         "operator": "and",
                         "fields": [
                             {
-                                "field": "s6774ee5f9", // ID field for conversation.id
+                                "field": "s6774ee5f9", // ID field for conversationid
                                 "comparison": "is",
-                                "value": conversation.id
+                                "value": conversationid
                             }
                         ]
                     }
