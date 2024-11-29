@@ -31,13 +31,17 @@
 
     <script>
 
-		
+		logMessage('Testing logMessage function');
 
         // Initialize Missive API and get the active conversation
         Missive.on('ready', () => {
+			    console.log('Missive API is ready.'); // Перевірка в консоль
+
             logMessage('Missive API is ready.');
             getActiveConversation();
         });
+		
+
 		
 		        // Function to log messages to the page
         function logMessage(message) {
