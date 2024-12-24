@@ -189,7 +189,11 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ endpoint: '/records', method: 'GET', data: {} })
+                    body: JSON.stringify({
+                        endpoint: '/api/v1/applications/64bea2c89335ca76865eedef/records/list/',
+                        method: 'POST',
+                        data: { limit: 100 }
+                    })
                 });
 
                 if (!response.ok) {
@@ -241,7 +245,7 @@
                     logMessage(`Task added: ${task.content.preview}`);
                 });
             } catch (error) {
-                console.error('Error populating data:', error);
+                logMessage(`Error populating data: ${error.message}`);
             }
         }
 
