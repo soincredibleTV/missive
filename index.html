@@ -3,84 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Missive API and SmartSuite Integration</title>
-    <script src="https://integrations.missiveapp.com/missive.js"></script>
+    <title>SmartSuite Integration</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #f9f9f9;
+            margin: 0;
             padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 400px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
             text-align: center;
         }
-        .log {
-            background-color: white;
-            border: 1px solid #ccc;
+
+        .link {
+            display: block;
+            background-color: #f4f4f4;
             padding: 10px;
-            height: 300px;
-            overflow-y: scroll;
-            margin-top: 20px;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007BFF;
+            text-decoration: none;
+            word-wrap: break-word;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #666;
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+            background-color: #007BFF;
+            display: inline-block;
+            border-radius: 2px;
+        }
+
+        .status, .stage {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .status {
+            background-color: #607D8B;
+        }
+
+        .stage {
+            background-color: #673AB7;
+        }
+
+        .tasks {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tasks li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .tasks li input {
+            margin-right: 10px;
+        }
+
+        .tasks li span {
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <h1>SmartSuite and Missive API Integration</h1>
-    <p>Fetching conversation status automatically from SmartSuite through Missive API.</p>
-    <div class="log" id="log">
-        <strong>Event log:</strong>
+    <div class="card">
+        <!-- Title from SmartSuite -->
+        <div id="title" class="title">Loading...</div>
+
+        <!-- Link to SmartSuite -->
+        <a id="link-to-ss" href="#" class="link">Loading...</a>
+
+        <!-- Status Section -->
+        <div class="section">
+            <div class="section-title">Status</div>
+            <div id="status" class="status">Loading... <span>&#9662;</span></div>
+        </div>
+
+        <!-- Stage Section -->
+        <div class="section">
+            <div class="section-title">Stage</div>
+            <div id="stage" class="stage">Loading... <span>&#9662;</span></div>
+        </div>
+
+        <!-- Deal Tasks Section -->
+        <div class="section">
+            <div class="section-title">Deal Tasks</div>
+            <ul id="tasks" class="tasks">
+                <li>Loading...</li>
+            </ul>
+        </div>
     </div>
 
     <script>
-        // Function to log messages to the page
-        function logMessage(message) {
-            const logContainer = document.getElementById('log');
-            const newLogEntry = document.createElement('p');
-            newLogEntry.textContent = message;
-            logContainer.appendChild(newLogEntry);
+        // Function to fetch data from Google Cloud Function
+        async function fetchData() {
+            const response = await fetch('https://us-central1-missive-ss-integration.cloudfunctions.net/smartSuiteProxy', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ endpoint: '/records', method: 'GET', data: {} })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            return response.json();
         }
 
-        logMessage('Initializing Missive integration...');
-
-        Missive.on('change:conversations', (ids) => {
-            Missive.fetchConversations(ids).then((conversations) => {
-                if (conversations.length !== 1) {
-                    logMessage('Multiple conversations selected. Skipping.');
-                    return;
-                }
-
-                const conversationId = conversations[0].id;
-                logMessage('Active conversation ID: ' + conversationId);
-                fetchFromGoogleCloud(conversationId);
-            });
-        });
-
-        // Function to fetch records through Google Cloud Function
-        async function fetchFromGoogleCloud(conversationId) {
+        // Populate data into the card
+        async function populateData() {
             try {
-                const endpoint = '/api/v1/applications/64bea2c89335ca76865eedef/records/list/';
-                const method = 'POST';
-                const data = {
-                    limit: 100
-                };
+                const data = await fetchData();
 
-                logMessage('Sending request to Google Cloud Function...');
-                const response = await fetch('https://us-central1-missive-ss-integration.cloudfunctions.net/smartSuiteProxy', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ endpoint, method, data, filter: { missiveId: conversationId } })
+                const item = data.items[0]; // Assuming the first item is used
+
+                // Set Title
+                document.getElementById('title').textContent = item.title || 'No Title';
+
+                // Set Link to SmartSuite
+                const linkElement = document.getElementById('link-to-ss');
+                linkElement.textContent = item.linkToSS || 'No Link';
+                linkElement.href = item.linkToSS || '#';
+
+                // Set Status
+                document.getElementById('status').textContent = item.status.value || 'No Status';
+
+                // Set Stage
+                document.getElementById('stage').textContent = item.sb2ebbc694.value || 'No Stage';
+
+                // Populate Deal Tasks
+                const tasksElement = document.getElementById('tasks');
+                tasksElement.innerHTML = ""; // Clear existing tasks
+
+                const dealTasks = item.s7ea226547.items || [];
+                dealTasks.forEach(task => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<input type="checkbox" ${task.completed ? 'checked' : ''}> <span>${task.content.preview}</span>`;
+                    tasksElement.appendChild(li);
                 });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                logMessage('Google Cloud Function Response: ' + JSON.stringify(result));
             } catch (error) {
-                logMessage('Error fetching data from Google Cloud Function: ' + error.message);
+                console.error('Error populating data:', error);
             }
         }
+
+        // Initialize the page with data
+        populateData();
     </script>
 </body>
 </html>
