@@ -130,7 +130,7 @@
 <body>
     <div class="card">
         <!-- Title from SmartSuite -->
-        <div id="title" class="title">11Loading...</div>
+        <div id="title" class="title">Loading...</div>
 
         <!-- Link to SmartSuite -->
         <a id="link-to-ss" href="#" class="link">Loading...</a>
@@ -180,6 +180,25 @@
 
         logMessage('Initializing SmartSuite data fetch...');
 
+        // Fetch SmartSuite records using Missive's conversation ID
+        Missive.on('change:conversations', (ids) => {
+            Missive.fetchConversations(ids).then((conversations) => {
+                if (conversations.length !== 1) {
+                    logMessage('Multiple conversations selected. Skipping.');
+                    return;
+                }
+
+                const conversationId = conversations[0].id;
+                logMessage(`Active conversation ID: ${conversationId}`);
+
+                fetchData(conversationId).then(data => {
+                    populateData(data);
+                }).catch(error => {
+                    logMessage(`Error fetching data: ${error.message}`);
+                });
+            });
+        });
+
         // Function to fetch data from Google Cloud Function
         async function fetchData(conversationId) {
             try {
@@ -211,9 +230,8 @@
         }
 
         // Populate data into the card
-        async function populateData(conversationId) {
+        function populateData(data) {
             try {
-                const data = await fetchData(conversationId);
                 const item = data.items[0]; // Assuming the first item is used
 
                 // Set Title
@@ -249,20 +267,6 @@
                 logMessage(`Error populating data: ${error.message}`);
             }
         }
-
-        // Missive event listener to get conversation ID
-        Missive.on('change:conversations', (ids) => {
-            Missive.fetchConversations(ids).then((conversations) => {
-                if (conversations.length !== 1) {
-                    logMessage('Multiple conversations selected. Skipping.');
-                    return;
-                }
-
-                const conversationId = conversations[0].id;
-                logMessage(`Active conversation ID: ${conversationId}`);
-                populateData(conversationId);
-            });
-        });
     </script>
 </body>
 </html>
