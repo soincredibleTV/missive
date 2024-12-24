@@ -52,6 +52,25 @@
             logContainer.scrollTop = logContainer.scrollHeight; // Auto-scroll to the bottom
         }
 
+        // Check if Missive API is available
+        log('Checking Missive API availability...', 'info');
+        if (typeof Missive === 'undefined') {
+            log('Missive API is not available. Make sure the page is embedded in Missive.', 'error');
+        } else {
+            log('Missive API loaded successfully.', 'success');
+
+            // Initialize Missive event listeners
+            Missive.on('conversation', (conversation) => {
+                if (conversation && conversation.id) {
+                    log(`Conversation loaded: ${conversation.id}`, 'info');
+                    currentMissiveId = conversation.id;
+                    fetchDataButton.disabled = false; // Enable button after conversation is loaded
+                } else {
+                    log('No conversation loaded or conversation ID is missing.', 'error');
+                }
+            });
+        }
+
         // Fetch data from Google Cloud Function
         async function fetchData() {
             if (!currentMissiveId) {
@@ -86,23 +105,12 @@
             }
         }
 
-        // Initialize Missive event listeners
-        Missive.on('conversation', (conversation) => {
-            if (conversation && conversation.id) {
-                log(`Conversation loaded: ${conversation.id}`, 'info');
-                currentMissiveId = conversation.id;
-                fetchDataButton.disabled = false; // Enable button after conversation is loaded
-            } else {
-                log('No conversation loaded or conversation ID is missing.', 'error');
-            }
-        });
-
         fetchDataButton.addEventListener('click', () => {
             log('Fetch button clicked', 'info');
             fetchData();
         });
 
-        // Additional logging for Missive API readiness
+        // Log waiting for Missive API
         log('Waiting for Missive API to load...', 'info');
     </script>
 </body>
