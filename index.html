@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Missive Integration</title>
+    <title>Missive SmartSuite Integration</title>
     <link href="https://integrations.missiveapp.com/missive.css" rel="stylesheet">
     <script src="https://integrations.missiveapp.com/missive.js"></script>
     <style>
@@ -34,37 +34,39 @@
     </style>
 </head>
 <body>
-    <h1>Missive Integration with SmartSuite</h1>
-    <button id="fetch-data">Fetch Data</button>
+    <h1>Missive SmartSuite Integration</h1>
+    <button id="fetch-data">Fetch Filtered Data</button>
     <div id="log"></div>
 
     <script>
         const logContainer = document.getElementById('log');
 
-        // Helper function to log messages
+        // Function to log messages in the UI
         function log(message, type = 'info') {
             const logItem = document.createElement('div');
             logItem.className = 'log-item';
             logItem.innerHTML = `<span>${type.toUpperCase()}:</span> ${message}`;
             logContainer.appendChild(logItem);
-            logContainer.scrollTop = logContainer.scrollHeight; // Scroll to the bottom
+            logContainer.scrollTop = logContainer.scrollHeight; // Auto-scroll to the bottom
         }
 
         // Fetch data from Google Cloud Function
         async function fetchData() {
-            const endpoint = '/api/v1/applications/64bea2c89335ca76865eedef/records/list/';
-            const method = 'POST';
-            const data = { limit: 3 };
-
             try {
-                log('Sending request to Google Cloud Function...', 'info');
+                const missiveId = Missive.getConversation().id; // Get the current Missive ID
+                const endpoint = '/api/v1/applications/64bea2c89335ca76865eedef/records/list/'; // SmartSuite App ID
+                const method = 'POST';
+                const data = { limit: 100 };
+                const filter = { missiveId }; // Pass the Missive ID for filtering
+
+                log(`Fetching data for Missive ID: ${missiveId}`, 'info');
 
                 const response = await fetch('https://us-central1-missive-ss-integration.cloudfunctions.net/smartSuiteProxy', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ endpoint, method, data }),
+                    body: JSON.stringify({ endpoint, method, data, filter }),
                 });
 
                 if (!response.ok) {
@@ -74,11 +76,10 @@
                 const result = await response.json();
                 log(`Response: ${JSON.stringify(result)}`, 'success');
             } catch (error) {
-                log(`Error: ${error.message}`, 'error');
+                log(`Error fetching data: ${error.message}`, 'error');
             }
         }
 
-        // Attach event listener to the button
         document.getElementById('fetch-data').addEventListener('click', fetchData);
     </script>
 </body>
