@@ -130,7 +130,7 @@
 <body>
     <div class="card">
         <!-- Title from SmartSuite -->
-        <div id="title" class="title">Loading...</div>
+        <div id="title" class="title">11Loading...</div>
 
         <!-- Link to SmartSuite -->
         <a id="link-to-ss" href="#" class="link">Loading...</a>
@@ -181,7 +181,7 @@
         logMessage('Initializing SmartSuite data fetch...');
 
         // Function to fetch data from Google Cloud Function
-        async function fetchData() {
+        async function fetchData(conversationId) {
             try {
                 logMessage('Fetching data from Google Cloud Function...');
                 const response = await fetch('https://us-central1-missive-ss-integration.cloudfunctions.net/smartSuiteProxy', {
@@ -192,7 +192,8 @@
                     body: JSON.stringify({
                         endpoint: '/api/v1/applications/64bea2c89335ca76865eedef/records/list/',
                         method: 'POST',
-                        data: { limit: 100 }
+                        data: { limit: 100 },
+                        filter: { missiveId: conversationId }
                     })
                 });
 
@@ -210,9 +211,9 @@
         }
 
         // Populate data into the card
-        async function populateData() {
+        async function populateData(conversationId) {
             try {
-                const data = await fetchData();
+                const data = await fetchData(conversationId);
                 const item = data.items[0]; // Assuming the first item is used
 
                 // Set Title
@@ -249,8 +250,19 @@
             }
         }
 
-        // Initialize the page with data
-        populateData();
+        // Missive event listener to get conversation ID
+        Missive.on('change:conversations', (ids) => {
+            Missive.fetchConversations(ids).then((conversations) => {
+                if (conversations.length !== 1) {
+                    logMessage('Multiple conversations selected. Skipping.');
+                    return;
+                }
+
+                const conversationId = conversations[0].id;
+                logMessage(`Active conversation ID: ${conversationId}`);
+                populateData(conversationId);
+            });
+        });
     </script>
 </body>
 </html>
