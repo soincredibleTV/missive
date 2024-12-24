@@ -35,11 +35,13 @@
 </head>
 <body>
     <h1>Missive SmartSuite Integration</h1>
-    <button id="fetch-data">Fetch Filtered Data</button>
+    <button id="fetch-data" disabled>Fetch Filtered Data</button>
     <div id="log"></div>
 
     <script>
         const logContainer = document.getElementById('log');
+        const fetchDataButton = document.getElementById('fetch-data');
+        let currentMissiveId = null;
 
         // Function to log messages in the UI
         function log(message, type = 'info') {
@@ -52,21 +54,18 @@
 
         // Fetch data from Google Cloud Function
         async function fetchData() {
-            try {
-                // Получение текущего Missive ID через существующий API
-                const missiveConversation = Missive.getConversation();
-                if (!missiveConversation || !missiveConversation.id) {
-                    log('Unable to fetch Missive ID. Please ensure the page is loaded in Missive.', 'error');
-                    return;
-                }
+            if (!currentMissiveId) {
+                log('Missive ID is not available. Cannot fetch data.', 'error');
+                return;
+            }
 
-                const missiveId = missiveConversation.id;
+            try {
                 const endpoint = '/api/v1/applications/64bea2c89335ca76865eedef/records/list/'; // SmartSuite App ID
                 const method = 'POST';
                 const data = { limit: 100 };
-                const filter = { missiveId }; // Pass the Missive ID for filtering
+                const filter = { missiveId: currentMissiveId }; // Pass the Missive ID for filtering
 
-                log(`Fetching data for Missive ID: ${missiveId}`, 'info');
+                log(`Fetching data for Missive ID: ${currentMissiveId}`, 'info');
 
                 const response = await fetch('https://us-central1-missive-ss-integration.cloudfunctions.net/smartSuiteProxy', {
                     method: 'POST',
@@ -87,11 +86,24 @@
             }
         }
 
-        // Attach event listener to the button
-        document.getElementById('fetch-data').addEventListener('click', fetchData);
+        // Initialize Missive event listeners
+        Missive.on('conversation', (conversation) => {
+            if (conversation && conversation.id) {
+                log(`Conversation loaded: ${conversation.id}`, 'info');
+                currentMissiveId = conversation.id;
+                fetchDataButton.disabled = false; // Enable button after conversation is loaded
+            } else {
+                log('No conversation loaded or conversation ID is missing.', 'error');
+            }
+        });
+
+        fetchDataButton.addEventListener('click', () => {
+            log('Fetch button clicked', 'info');
+            fetchData();
+        });
 
         // Initial log
-        log('Page loaded inside Missive.', 'info');
+        log('Waiting for Missive API to load...', 'info');
     </script>
 </body>
 </html>
