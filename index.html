@@ -129,33 +129,22 @@
 </head>
 <body>
     <div class="card">
-        <!-- Title from SmartSuite -->
         <div id="title" class="title">Loading...</div>
-
-        <!-- Link to SmartSuite -->
         <a id="link-to-ss" href="#" class="link">Loading...</a>
-
-        <!-- Status Section -->
         <div class="section">
             <div class="section-title">Status</div>
             <div id="status" class="status">Loading... <span>&#9662;</span></div>
         </div>
-
-        <!-- Stage Section -->
         <div class="section">
             <div class="section-title">Stage</div>
             <div id="stage" class="stage">Loading... <span>&#9662;</span></div>
         </div>
-
-        <!-- Deal Tasks Section -->
         <div class="section">
             <div class="section-title">Deal Tasks</div>
             <ul id="tasks" class="tasks">
                 <li>Loading...</li>
             </ul>
         </div>
-
-        <!-- Technical Details Section -->
         <div class="technical-details" id="technical-details"></div>
         <a class="technical-details-toggle" id="toggle-details">Show Technical Details</a>
     </div>
@@ -180,7 +169,7 @@
 
         logMessage('Initializing SmartSuite data fetch...');
 
-        // Fetch SmartSuite records using Missive's conversation ID
+        // Missive event listener to get conversation ID
         Missive.on('change:conversations', (ids) => {
             Missive.fetchConversations(ids).then((conversations) => {
                 if (conversations.length !== 1) {
@@ -232,36 +221,22 @@
         // Populate data into the card
         function populateData(data) {
             try {
-                const item = data.items[0]; // Assuming the first item is used
+                const item = data.items[0];
 
-                // Set Title
                 document.getElementById('title').textContent = item.title || 'No Title';
-                logMessage(`Title set to: ${item.title}`);
-
-                // Set Link to SmartSuite
                 const linkElement = document.getElementById('link-to-ss');
                 linkElement.textContent = item.linkToSS || 'No Link';
                 linkElement.href = item.linkToSS || '#';
-                logMessage(`Link to SmartSuite set to: ${item.linkToSS}`);
-
-                // Set Status
                 document.getElementById('status').textContent = item.status.value || 'No Status';
-                logMessage(`Status set to: ${item.status.value}`);
-
-                // Set Stage
                 document.getElementById('stage').textContent = item.sb2ebbc694.value || 'No Stage';
-                logMessage(`Stage set to: ${item.sb2ebbc694.value}`);
 
-                // Populate Deal Tasks
                 const tasksElement = document.getElementById('tasks');
-                tasksElement.innerHTML = ""; // Clear existing tasks
-
+                tasksElement.innerHTML = '';
                 const dealTasks = item.s7ea226547.items || [];
                 dealTasks.forEach(task => {
                     const li = document.createElement('li');
                     li.innerHTML = `<input type="checkbox" ${task.completed ? 'checked' : ''}> <span>${task.content.preview}</span>`;
                     tasksElement.appendChild(li);
-                    logMessage(`Task added: ${task.content.preview}`);
                 });
             } catch (error) {
                 logMessage(`Error populating data: ${error.message}`);
