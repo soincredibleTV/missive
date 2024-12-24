@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartSuite Integration</title>
+    <title>Missive API and SmartSuite Integration</title>
+    <script src="https://integrations.missiveapp.com/missive.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -62,7 +63,6 @@
             border-radius: 5px;
             color: #fff;
             font-weight: bold;
-            background-color: #607D8B;
         }
 
         .status {
@@ -98,6 +98,23 @@
             text-align: center;
             margin-top: 20px;
         }
+
+        .tech-details {
+            margin-top: 20px;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .tech-details-toggle {
+            cursor: pointer;
+            color: #007BFF;
+            text-decoration: underline;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -119,9 +136,13 @@
             </ul>
         </div>
     </div>
+
     <div class="no-records" id="no-records" style="display: none;">
         Ooops, we can't find corresponding record in SmartSuite.
     </div>
+
+    <div class="tech-details" id="tech-details" style="display: none;"></div>
+    <a id="toggle-tech-details" class="tech-details-toggle">Show Technical Details</a>
 
     <script>
         let currentConversationId = null;
@@ -141,6 +162,22 @@
             document.getElementById('data-card').style.display = showCard ? 'block' : 'none';
             document.getElementById('no-records').style.display = showCard ? 'none' : 'block';
         }
+
+        // Function to log messages to tech details
+        function logMessage(message) {
+            const logContainer = document.getElementById('tech-details');
+            const logEntry = document.createElement('div');
+            logEntry.textContent = message;
+            logContainer.appendChild(logEntry);
+        }
+
+        // Toggle technical details visibility
+        document.getElementById('toggle-tech-details').addEventListener('click', () => {
+            const techDetails = document.getElementById('tech-details');
+            const isHidden = techDetails.style.display === 'none';
+            techDetails.style.display = isHidden ? 'block' : 'none';
+            document.getElementById('toggle-tech-details').textContent = isHidden ? 'Hide Technical Details' : 'Show Technical Details';
+        });
 
         Missive.on('change:conversations', (ids) => {
             Missive.fetchConversations(ids).then((conversations) => {
@@ -170,6 +207,7 @@
                     limit: 100
                 };
 
+                logMessage('Fetching data from Google Cloud Function...');
                 const response = await fetch('https://us-central1-missive-ss-integration.cloudfunctions.net/smartSuiteProxy', {
                     method: 'POST',
                     headers: {
@@ -183,6 +221,7 @@
                 }
 
                 const result = await response.json();
+                logMessage(`Response received: ${JSON.stringify(result)}`);
 
                 if (result.items.length === 0) {
                     toggleVisibility(false);
@@ -190,7 +229,7 @@
                     updateCard(result.items[0]);
                 }
             } catch (error) {
-                console.error('Error fetching data:', error);
+                logMessage(`Error fetching data: ${error.message}`);
                 toggleVisibility(false);
             }
         }
@@ -213,6 +252,8 @@
                 li.innerHTML = `<input type="checkbox" ${task.completed ? 'checked' : ''}> <span>${task.content.preview}</span>`;
                 tasksElement.appendChild(li);
             });
+
+            logMessage('Card updated with new data.');
         }
     </script>
 </body>
