@@ -22,6 +22,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 20px;
             width: 400px;
+            position: relative;
         }
 
         .title {
@@ -104,6 +105,26 @@
         .tasks li span {
             font-size: 14px;
         }
+
+        .technical-details {
+            margin-top: 20px;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .technical-details-toggle {
+            cursor: pointer;
+            color: #007BFF;
+            text-decoration: underline;
+            margin-top: 10px;
+            display: block;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -133,46 +154,80 @@
                 <li>Loading...</li>
             </ul>
         </div>
+
+        <!-- Technical Details Section -->
+        <div class="technical-details" id="technical-details"></div>
+        <a class="technical-details-toggle" id="toggle-details">Show Technical Details</a>
     </div>
 
     <script>
+        const logContainer = document.getElementById('technical-details');
+        const toggleDetails = document.getElementById('toggle-details');
+
+        // Function to log messages
+        function logMessage(message) {
+            const logEntry = document.createElement('div');
+            logEntry.textContent = message;
+            logContainer.appendChild(logEntry);
+        }
+
+        // Toggle technical details visibility
+        toggleDetails.addEventListener('click', () => {
+            const isHidden = logContainer.style.display === 'none';
+            logContainer.style.display = isHidden ? 'block' : 'none';
+            toggleDetails.textContent = isHidden ? 'Hide Technical Details' : 'Show Technical Details';
+        });
+
+        logMessage('Initializing SmartSuite data fetch...');
+
         // Function to fetch data from Google Cloud Function
         async function fetchData() {
-            const response = await fetch('https://us-central1-missive-ss-integration.cloudfunctions.net/smartSuiteProxy', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ endpoint: '/records', method: 'GET', data: {} })
-            });
+            try {
+                logMessage('Fetching data from Google Cloud Function...');
+                const response = await fetch('https://us-central1-missive-ss-integration.cloudfunctions.net/smartSuiteProxy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ endpoint: '/records', method: 'GET', data: {} })
+                });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                logMessage(`Response received: ${JSON.stringify(data)}`);
+                return data;
+            } catch (error) {
+                logMessage(`Error fetching data: ${error.message}`);
+                throw error;
             }
-
-            return response.json();
         }
 
         // Populate data into the card
         async function populateData() {
             try {
                 const data = await fetchData();
-
                 const item = data.items[0]; // Assuming the first item is used
 
                 // Set Title
                 document.getElementById('title').textContent = item.title || 'No Title';
+                logMessage(`Title set to: ${item.title}`);
 
                 // Set Link to SmartSuite
                 const linkElement = document.getElementById('link-to-ss');
                 linkElement.textContent = item.linkToSS || 'No Link';
                 linkElement.href = item.linkToSS || '#';
+                logMessage(`Link to SmartSuite set to: ${item.linkToSS}`);
 
                 // Set Status
                 document.getElementById('status').textContent = item.status.value || 'No Status';
+                logMessage(`Status set to: ${item.status.value}`);
 
                 // Set Stage
                 document.getElementById('stage').textContent = item.sb2ebbc694.value || 'No Stage';
+                logMessage(`Stage set to: ${item.sb2ebbc694.value}`);
 
                 // Populate Deal Tasks
                 const tasksElement = document.getElementById('tasks');
@@ -183,6 +238,7 @@
                     const li = document.createElement('li');
                     li.innerHTML = `<input type="checkbox" ${task.completed ? 'checked' : ''}> <span>${task.content.preview}</span>`;
                     tasksElement.appendChild(li);
+                    logMessage(`Task added: ${task.content.preview}`);
                 });
             } catch (error) {
                 console.error('Error populating data:', error);
