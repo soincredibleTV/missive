@@ -203,7 +203,7 @@
             try {
                 const endpoint = '/api/v1/applications/64bea2c89335ca76865eedef/records/list/';
                 const method = 'POST';
-                const data = { limit: 100 };
+                const data = { limit: 1 };
 
                 const result = await callGoogleFunction(endpoint, method, { ...data, filter: { missiveId: conversationId } });
 
@@ -243,8 +243,9 @@
         }
 
         async function updateSmartSuiteField(recordId, field, value) {
-            const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${recordId}/update/`;
+            const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${recordId}/`;
             const method = 'PATCH';
+            const recordId = `${recordId}`;
             const data = {
                 fields: {
                     [field]: value
