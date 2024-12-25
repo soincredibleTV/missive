@@ -57,9 +57,6 @@
         }
 
         .status, .stage {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             padding: 10px;
             border-radius: 5px;
             color: #fff;
@@ -126,11 +123,29 @@
         <a href="#" class="link" id="card-link">Loading...</a>
         <div class="section">
             <div class="section-title">Status</div>
-            <div id="card-status" class="status">Loading...</div>
+            <select id="card-status" class="status">
+                <option value="backlog">Open</option>
+                <option value="in_progress">Won</option>
+                <option value="ready_for_review">Lost</option>
+                <option value="dd43aa26-8d5b-4558-9fe8-a51015b1a67e">Issues</option>
+            </select>
         </div>
         <div class="section">
             <div class="section-title">Stage</div>
-            <div id="card-stage" class="stage">Loading...</div>
+            <select id="card-stage" class="stage">
+                <option value="adb874ab-d993-4ea5-bcb7-6d8ef8702eac">Outreach</option>
+                <option value="backlog">New</option>
+                <option value="in_progress">Discovery Client</option>
+                <option value="ready_for_review">Quote Sent</option>
+                <option value="46411555-18fb-43c4-9b36-6455b631690d">Negotiating</option>
+                <option value="0e428758-78ec-4d57-891b-184e6bdc9b93">Offer With Talent</option>
+                <option value="gbMKa">Contracting</option>
+                <option value="fe024d93-ae28-4f1d-89b9-4e35472354f4">Ongoing (?)</option>
+                <option value="8b177551-6bf2-401e-ad3e-a2b30c66a497">Being Worked On</option>
+                <option value="6fd18d6b-fb19-400c-aec6-8ca7d90da205">Completed</option>
+                <option value="21dfd029-6d62-46e4-8eef-402c75ea2f2d">Invoice Sent</option>
+                <option value="064641c0-6eb0-4091-878f-9e62f1dbadf6">Invoice Paid</option>
+            </select>
         </div>
         <div class="section">
             <div class="section-title">Deal Tasks</div>
@@ -149,6 +164,7 @@
 
     <script>
         let currentConversationId = null;
+        let currentRecordId = null;
 
         const statusMapping = {
             "backlog": "Open",
@@ -172,36 +188,44 @@
             "064641c0-6eb0-4091-878f-9e62f1dbadf6": "Invoice Paid"
         };
 
-        // Function to reset card content to loading state
-        function resetCard() {
-            document.getElementById('card-title').textContent = 'Loading...';
-            document.getElementById('card-link').textContent = 'Loading...';
-            document.getElementById('card-link').href = '#';
-            document.getElementById('card-status').textContent = 'Loading...';
-            document.getElementById('card-stage').textContent = 'Loading...';
-            document.getElementById('card-tasks').innerHTML = '<li>Loading...</li>';
+        async function updateSmartSuiteField(recordId, field, value) {
+            try {
+                const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${recordId}/update/`;
+                const method = 'POST';
+                const data = {
+                    fields: {
+                        [field]: value
+                    }
+                };
+
+                logMessage(`Updating field ${field} to ${value}...`);
+
+                const response = await fetch('https://us-central1-missive-ss-integration.cloudfunctions.net/smartSuiteProxy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ endpoint, method, data })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                logMessage(`Field ${field} updated successfully.`);
+            } catch (error) {
+                logMessage(`Error updating field ${field}: ${error.message}`);
+            }
         }
 
-        // Function to toggle card visibility
-        function toggleVisibility(showCard) {
-            document.getElementById('data-card').style.display = showCard ? 'block' : 'none';
-            document.getElementById('no-records').style.display = showCard ? 'none' : 'block';
-        }
+        document.getElementById('card-status').addEventListener('change', (event) => {
+            const newValue = event.target.value;
+            updateSmartSuiteField(currentRecordId, 'sb2ebbc694', newValue);
+        });
 
-        // Function to log messages to tech details
-        function logMessage(message) {
-            const logContainer = document.getElementById('tech-details');
-            const logEntry = document.createElement('div');
-            logEntry.textContent = message;
-            logContainer.appendChild(logEntry);
-        }
-
-        // Toggle technical details visibility
-        document.getElementById('toggle-tech-details').addEventListener('click', () => {
-            const techDetails = document.getElementById('tech-details');
-            const isHidden = techDetails.style.display === 'none';
-            techDetails.style.display = isHidden ? 'block' : 'none';
-            document.getElementById('toggle-tech-details').textContent = isHidden ? 'Hide Technical Details' : 'Show Technical Details';
+        document.getElementById('card-stage').addEventListener('change', (event) => {
+            const newValue = event.target.value;
+            updateSmartSuiteField(currentRecordId, 'status', newValue);
         });
 
         Missive.on('change:conversations', (ids) => {
@@ -251,6 +275,7 @@
                 if (result.items.length === 0) {
                     toggleVisibility(false);
                 } else {
+                    currentRecordId = result.items[0].id;
                     updateCard(result.items[0]);
                 }
             } catch (error) {
@@ -266,19 +291,24 @@
             linkElement.textContent = item.s3e0bfef87 || 'No Link';
             linkElement.href = item.s3e0bfef87 || '#';
 
-            const statusValue = statusMapping[item.sb2ebbc694?.value] || 'Unknown';
-            document.getElementById('card-status').textContent = statusValue;
-
-            const stageValue = stageMapping[item.status?.value] || 'Unknown';
-            document.getElementById('card-stage').textContent = stageValue;
+            document.getElementById('card-status').value = item.sb2ebbc694?.value || 'backlog';
+            document.getElementById('card-stage').value = item.status?.value || 'backlog';
 
             const tasksElement = document.getElementById('card-tasks');
             tasksElement.innerHTML = '';
 
             (item.s7ea226547?.items || []).forEach(task => {
                 const li = document.createElement('li');
-                li.innerHTML = `<input type="checkbox" ${task.completed ? 'checked' : ''}> <span>${task.content.preview}</span>`;
+                li.innerHTML = `<input type="checkbox" data-task-id="${task.id}" ${task.completed ? 'checked' : ''}> <span>${task.content.preview}</span>`;
                 tasksElement.appendChild(li);
+            });
+
+            document.querySelectorAll('.tasks input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', (event) => {
+                    const taskId = event.target.dataset.taskId;
+                    const completed = event.target.checked;
+                    updateSmartSuiteField(currentRecordId, taskId, completed);
+                });
             });
 
             logMessage('Card updated with new data.');
