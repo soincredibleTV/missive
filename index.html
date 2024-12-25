@@ -30,21 +30,17 @@
             font-weight: bold;
             margin-bottom: 15px;
         }
-        .button-link {
+        .link {
             display: inline-block;
             background-color: #007BFF;
+            padding: 10px 15px;
             color: #fff;
-            padding: 10px 20px;
-            border-radius: 5px;
             text-decoration: none;
-            font-size: 14px;
-            font-weight: bold;
-            text-align: center;
+            border-radius: 5px;
             margin-bottom: 20px;
-            border: none;
-            cursor: pointer;
+            text-align: center;
         }
-        .button-link:hover {
+        .link:hover {
             background-color: #0056b3;
         }
         .section {
@@ -60,30 +56,57 @@
             align-items: center;
         }
         .section-title::before {
-            content: '\1F4C8'; /* Иконка перед названием */
-            margin-right: 5px;
+            content: '\1F4C8';
+            font-size: 18px;
+            margin-right: 8px;
+            color: #007BFF;
         }
-        .status {
-            position: relative;
-        }
-        .status select {
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-            font-size: 14px;
+        .status, .stage {
             width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            margin-top: 5px;
             cursor: pointer;
         }
-        .status select:focus {
-            outline: none;
-            border-color: #007BFF;
+        .status[data-color="Open"], .stage[data-color="Outreach"] {
+            background-color: #007bff;
         }
-        .status select option {
-            padding: 10px;
+        .status[data-color="Won"], .stage[data-color="New"] {
+            background-color: #28a745;
+        }
+        .status[data-color="Lost"], .stage[data-color="Discovery Client"] {
+            background-color: #ffc107;
+        }
+        .status[data-color="Issues"], .stage[data-color="Quote Sent"] {
+            background-color: #dc3545;
+        }
+        .stage[data-color="Negotiating"] {
+            background-color: #e83e8c;
+        }
+        .stage[data-color="Offer With Talent"] {
+            background-color: #fd7e14;
+        }
+        .stage[data-color="Contracting"] {
+            background-color: #20c997;
+        }
+        .stage[data-color="Ongoing (?)"] {
+            background-color: #6c757d;
+        }
+        .stage[data-color="Being Worked On"] {
+            background-color: #6f42c1;
+        }
+        .stage[data-color="Completed"] {
+            background-color: #17a2b8;
+        }
+        .stage[data-color="Invoice Sent"] {
+            background-color: #007bff;
+        }
+        .stage[data-color="Invoice Paid"] {
+            background-color: #6610f2;
         }
         .tasks {
             list-style: none;
@@ -122,33 +145,31 @@
 <body>
     <div class="card" id="data-card" style="display: none;">
         <div class="title" id="card-title">Loading...</div>
-        <button id="card-link" class="button-link">Open in SmartSuite</button>
+        <a href="#" target="_blank" class="link" id="card-link">Open in SmartSuite</a>
         <div class="section">
             <div class="section-title">Status</div>
-            <div class="status">
-                <select id="card-status" class="status">
-                    <option value="backlog" style="background-color: #ccc; color: #000;">Open</option>
-                    <option value="in_progress" style="background-color: #4CAF50; color: #fff;">Won</option>
-                    <option value="ready_for_review" style="background-color: #FF9800; color: #fff;">Lost</option>
-                    <option value="dd43aa26-8d5b-4558-9fe8-a51015b1a67e" style="background-color: #F44336; color: #fff;">Issues</option>
-                </select>
-            </div>
+            <select id="card-status" class="status" data-color="Open">
+                <option value="backlog" data-color="Open">Open</option>
+                <option value="in_progress" data-color="Won">Won</option>
+                <option value="ready_for_review" data-color="Lost">Lost</option>
+                <option value="dd43aa26-8d5b-4558-9fe8-a51015b1a67e" data-color="Issues">Issues</option>
+            </select>
         </div>
         <div class="section">
             <div class="section-title">Stage</div>
-            <select id="card-stage" class="stage">
-                <option value="adb874ab-d993-4ea5-bcb7-6d8ef8702eac">Outreach</option>
-                <option value="backlog">New</option>
-                <option value="in_progress">Discovery Client</option>
-                <option value="ready_for_review">Quote Sent</option>
-                <option value="46411555-18fb-43c4-9b36-6455b631690d">Negotiating</option>
-                <option value="0e428758-78ec-4d57-891b-184e6bdc9b93">Offer With Talent</option>
-                <option value="gbMKa">Contracting</option>
-                <option value="fe024d93-ae28-4f1d-89b9-4e35472354f4">Ongoing (?)</option>
-                <option value="8b177551-6bf2-401e-ad3e-a2b30c66a497">Being Worked On</option>
-                <option value="6fd18d6b-fb19-400c-aec6-8ca7d90da205">Completed</option>
-                <option value="21dfd029-6d62-46e4-8eef-402c75ea2f2d">Invoice Sent</option>
-                <option value="064641c0-6eb0-4091-878f-9e62f1dbadf6">Invoice Paid</option>
+            <select id="card-stage" class="stage" data-color="Outreach">
+                <option value="adb874ab-d993-4ea5-bcb7-6d8ef8702eac" data-color="Outreach">Outreach</option>
+                <option value="backlog" data-color="New">New</option>
+                <option value="in_progress" data-color="Discovery Client">Discovery Client</option>
+                <option value="ready_for_review" data-color="Quote Sent">Quote Sent</option>
+                <option value="46411555-18fb-43c4-9b36-6455b631690d" data-color="Negotiating">Negotiating</option>
+                <option value="0e428758-78ec-4d57-891b-184e6bdc9b93" data-color="Offer With Talent">Offer With Talent</option>
+                <option value="gbMKa" data-color="Contracting">Contracting</option>
+                <option value="fe024d93-ae28-4f1d-89b9-4e35472354f4" data-color="Ongoing (?)">Ongoing (?)</option>
+                <option value="8b177551-6bf2-401e-ad3e-a2b30c66a497" data-color="Being Worked On">Being Worked On</option>
+                <option value="6fd18d6b-fb19-400c-aec6-8ca7d90da205" data-color="Completed">Completed</option>
+                <option value="21dfd029-6d62-46e4-8eef-402c75ea2f2d" data-color="Invoice Sent">Invoice Sent</option>
+                <option value="064641c0-6eb0-4091-878f-9e62f1dbadf6" data-color="Invoice Paid">Invoice Paid</option>
             </select>
         </div>
         <div class="section">
@@ -171,9 +192,10 @@
 
         function resetCard() {
             document.getElementById('card-title').textContent = 'Loading...';
-            document.getElementById('card-link').setAttribute('href', '#');
+            document.getElementById('card-link').textContent = 'Open in SmartSuite';
+            document.getElementById('card-link').href = '#';
             document.getElementById('card-status').value = 'backlog';
-            document.getElementById('card-stage').value = 'backlog';
+            document.getElementById('card-stage').value = 'adb874ab-d993-4ea5-bcb7-6d8ef8702eac';
             document.getElementById('card-tasks').innerHTML = '<li>Loading...</li>';
         }
 
@@ -247,11 +269,10 @@
         function updateCard(item) {
             document.getElementById('card-title').textContent = item.title || 'No Title';
             const linkElement = document.getElementById('card-link');
-            linkElement.textContent = 'Open in SmartSuite';
             linkElement.href = item.s3e0bfef87 || '#';
 
             document.getElementById('card-status').value = item.sb2ebbc694?.value || 'backlog';
-            document.getElementById('card-stage').value = item.status?.value || 'backlog';
+            document.getElementById('card-stage').value = item.status?.value || 'adb874ab-d993-4ea5-bcb7-6d8ef8702eac';
 
             const tasksElement = document.getElementById('card-tasks');
             tasksElement.innerHTML = '';
