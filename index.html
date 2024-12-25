@@ -30,15 +30,22 @@
             font-weight: bold;
             margin-bottom: 15px;
         }
-        .link {
-            display: block;
-            background-color: #f4f4f4;
-            padding: 10px;
+        .button-link {
+            display: inline-block;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
             border-radius: 5px;
-            margin-bottom: 20px;
-            color: #007BFF;
             text-decoration: none;
-            word-wrap: break-word;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            border: none;
+            cursor: pointer;
+        }
+        .button-link:hover {
+            background-color: #0056b3;
         }
         .section {
             margin-bottom: 15px;
@@ -49,6 +56,34 @@
             text-transform: uppercase;
             color: #666;
             margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        .section-title::before {
+            content: '\1F4C8'; /* Иконка перед названием */
+            margin-right: 5px;
+        }
+        .status {
+            position: relative;
+        }
+        .status select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 14px;
+            width: 100%;
+            cursor: pointer;
+        }
+        .status select:focus {
+            outline: none;
+            border-color: #007BFF;
+        }
+        .status select option {
+            padding: 10px;
         }
         .tasks {
             list-style: none;
@@ -87,15 +122,17 @@
 <body>
     <div class="card" id="data-card" style="display: none;">
         <div class="title" id="card-title">Loading...</div>
-        <a href="#" class="link" id="card-link">Loading...</a>
+        <button id="card-link" class="button-link">Open in SmartSuite</button>
         <div class="section">
             <div class="section-title">Status</div>
-            <select id="card-status" class="status">
-                <option value="backlog">Open</option>
-                <option value="in_progress">Won</option>
-                <option value="ready_for_review">Lost</option>
-                <option value="dd43aa26-8d5b-4558-9fe8-a51015b1a67e">Issues</option>
-            </select>
+            <div class="status">
+                <select id="card-status" class="status">
+                    <option value="backlog" style="background-color: #ccc; color: #000;">Open</option>
+                    <option value="in_progress" style="background-color: #4CAF50; color: #fff;">Won</option>
+                    <option value="ready_for_review" style="background-color: #FF9800; color: #fff;">Lost</option>
+                    <option value="dd43aa26-8d5b-4558-9fe8-a51015b1a67e" style="background-color: #F44336; color: #fff;">Issues</option>
+                </select>
+            </div>
         </div>
         <div class="section">
             <div class="section-title">Stage</div>
@@ -134,8 +171,7 @@
 
         function resetCard() {
             document.getElementById('card-title').textContent = 'Loading...';
-            document.getElementById('card-link').textContent = 'Loading...';
-            document.getElementById('card-link').href = '#';
+            document.getElementById('card-link').setAttribute('href', '#');
             document.getElementById('card-status').value = 'backlog';
             document.getElementById('card-stage').value = 'backlog';
             document.getElementById('card-tasks').innerHTML = '<li>Loading...</li>';
@@ -211,7 +247,7 @@
         function updateCard(item) {
             document.getElementById('card-title').textContent = item.title || 'No Title';
             const linkElement = document.getElementById('card-link');
-            linkElement.textContent = item.s3e0bfef87 || 'No Link';
+            linkElement.textContent = 'Open in SmartSuite';
             linkElement.href = item.s3e0bfef87 || '#';
 
             document.getElementById('card-status').value = item.sb2ebbc694?.value || 'backlog';
