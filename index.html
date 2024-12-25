@@ -30,20 +30,16 @@
             font-weight: bold;
             margin-bottom: 15px;
         }
-        .link-button {
-            display: inline-block;
+        .link {
+            display: block;
             background-color: #007BFF;
             color: white;
-            padding: 10px 15px;
             text-align: center;
-            text-decoration: none;
+            padding: 10px;
             border-radius: 5px;
             margin-bottom: 20px;
-            border: none;
-            cursor: pointer;
-        }
-        .link-button:hover {
-            background-color: #0056b3;
+            text-decoration: none;
+            font-weight: bold;
         }
         .section {
             margin-bottom: 15px;
@@ -60,40 +56,8 @@
         .section-title img {
             width: 16px;
             height: 16px;
-            margin-right: 5px;
+            margin-right: 8px;
         }
-        select {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            appearance: none;
-            background-color: #f4f4f4;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        .status-option, .stage-option {
-            padding: 10px;
-            font-size: 14px;
-        }
-        .status-option[value="backlog"] { background-color: #607d8b; color: white; }
-        .status-option[value="in_progress"] { background-color: #4caf50; color: white; }
-        .status-option[value="ready_for_review"] { background-color: #ff9800; color: white; }
-        .status-option[value="dd43aa26-8d5b-4558-9fe8-a51015b1a67e"] { background-color: #f44336; color: white; }
-
-        .stage-option[value="adb874ab-d993-4ea5-bcb7-6d8ef8702eac"] { background-color: #fff3cd; color: black; }
-        .stage-option[value="backlog"] { background-color: #607d8b; color: white; }
-        .stage-option[value="in_progress"] { background-color: #2196f3; color: white; }
-        .stage-option[value="ready_for_review"] { background-color: #03a9f4; color: white; }
-        .stage-option[value="46411555-18fb-43c4-9b36-6455b631690d"] { background-color: #e91e63; color: white; }
-        .stage-option[value="0e428758-78ec-4d57-891b-184e6bdc9b93"] { background-color: #ffc107; color: black; }
-        .stage-option[value="gbMKa"] { background-color: #c8e6c9; color: black; }
-        .stage-option[value="fe024d93-ae28-4f1d-89b9-4e35472354f4"] { background-color: #9e9e9e; color: white; }
-        .stage-option[value="8b177551-6bf2-401e-ad3e-a2b30c66a497"] { background-color: #673ab7; color: white; }
-        .stage-option[value="6fd18d6b-fb19-400c-aec6-8ca7d90da205"] { background-color: #00bcd4; color: white; }
-        .stage-option[value="21dfd029-6d62-46e4-8eef-402c75ea2f2d"] { background-color: #3f51b5; color: white; }
-        .stage-option[value="064641c0-6eb0-4091-878f-9e62f1dbadf6"] { background-color: #e1bee7; color: black; }
-
         .tasks {
             list-style: none;
             padding: 0;
@@ -108,6 +72,9 @@
         }
         .tasks li span {
             font-size: 14px;
+        }
+        .tasks li input[disabled] {
+            cursor: not-allowed;
         }
         .no-records {
             font-size: 16px;
@@ -126,36 +93,48 @@
             overflow-y: auto;
             margin-top: 20px;
         }
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div class="card" id="data-card" style="display: none;">
         <div class="title" id="card-title">Loading...</div>
-        <button class="link-button" id="card-link" onclick="window.open('#', '_blank')">Open in SmartSuite</button>
+        <a href="#" class="link" id="card-link">Open in SmartSuite</a>
         <div class="section">
-            <div class="section-title"><img src="status-icon.png" alt="Status">Status</div>
+            <div class="section-title">
+                <img src="https://via.placeholder.com/16" alt="Status Icon"> Status
+            </div>
             <select id="card-status" class="status">
-                <option class="status-option" value="backlog">Open</option>
-                <option class="status-option" value="in_progress">Won</option>
-                <option class="status-option" value="ready_for_review">Lost</option>
-                <option class="status-option" value="dd43aa26-8d5b-4558-9fe8-a51015b1a67e">Issues</option>
+                <option value="backlog" style="background-color: #ccc; color: black;">Open</option>
+                <option value="in_progress" style="background-color: #28a745; color: white;">Won</option>
+                <option value="ready_for_review" style="background-color: #ff5733; color: white;">Lost</option>
+                <option value="dd43aa26-8d5b-4558-9fe8-a51015b1a67e" style="background-color: #dc3545; color: white;">Issues</option>
             </select>
         </div>
         <div class="section">
-            <div class="section-title"><img src="stage-icon.png" alt="Stage">Stage</div>
+            <div class="section-title">
+                <img src="https://via.placeholder.com/16" alt="Stage Icon"> Stage
+            </div>
             <select id="card-stage" class="stage">
-                <option class="stage-option" value="adb874ab-d993-4ea5-bcb7-6d8ef8702eac">Outreach</option>
-                <option class="stage-option" value="backlog">New</option>
-                <option class="stage-option" value="in_progress">Discovery Client</option>
-                <option class="stage-option" value="ready_for_review">Quote Sent</option>
-                <option class="stage-option" value="46411555-18fb-43c4-9b36-6455b631690d">Negotiating</option>
-                <option class="stage-option" value="0e428758-78ec-4d57-891b-184e6bdc9b93">Offer With Talent</option>
-                <option class="stage-option" value="gbMKa">Contracting</option>
-                <option class="stage-option" value="fe024d93-ae28-4f1d-89b9-4e35472354f4">Ongoing (?)</option>
-                <option class="stage-option" value="8b177551-6bf2-401e-ad3e-a2b30c66a497">Being Worked On</option>
-                <option class="stage-option" value="6fd18d6b-fb19-400c-aec6-8ca7d90da205">Completed</option>
-                <option class="stage-option" value="21dfd029-6d62-46e4-8eef-402c75ea2f2d">Invoice Sent</option>
-                <option class="stage-option" value="064641c0-6eb0-4091-878f-9e62f1dbadf6">Invoice Paid</option>
+                <option value="adb874ab-d993-4ea5-bcb7-6d8ef8702eac" style="background-color: #ffeeba; color: black;">Outreach</option>
+                <option value="backlog" style="background-color: #6c757d; color: white;">New</option>
+                <option value="in_progress" style="background-color: #007bff; color: white;">Discovery Client</option>
+                <option value="ready_for_review" style="background-color: #6610f2; color: white;">Quote Sent</option>
+                <option value="46411555-18fb-43c4-9b36-6455b631690d" style="background-color: #e83e8c; color: white;">Negotiating</option>
+                <option value="0e428758-78ec-4d57-891b-184e6bdc9b93" style="background-color: #ffc107; color: black;">Offer With Talent</option>
+                <option value="gbMKa" style="background-color: #28a745; color: white;">Contracting</option>
+                <option value="fe024d93-ae28-4f1d-89b9-4e35472354f4" style="background-color: #343a40; color: white;">Ongoing (?)</option>
+                <option value="8b177551-6bf2-401e-ad3e-a2b30c66a497" style="background-color: #6f42c1; color: white;">Being Worked On</option>
+                <option value="6fd18d6b-fb19-400c-aec6-8ca7d90da205" style="background-color: #20c997; color: white;">Completed</option>
+                <option value="21dfd029-6d62-46e4-8eef-402c75ea2f2d" style="background-color: #17a2b8; color: white;">Invoice Sent</option>
+                <option value="064641c0-6eb0-4091-878f-9e62f1dbadf6" style="background-color: #d63384; color: white;">Invoice Paid</option>
             </select>
         </div>
         <div class="section">
@@ -178,9 +157,7 @@
 
         function resetCard() {
             document.getElementById('card-title').textContent = 'Loading...';
-            const linkButton = document.getElementById('card-link');
-            linkButton.textContent = 'Open in SmartSuite';
-            linkButton.onclick = () => window.open('#', '_blank');
+            document.getElementById('card-link').href = '#';
             document.getElementById('card-status').value = 'backlog';
             document.getElementById('card-stage').value = 'backlog';
             document.getElementById('card-tasks').innerHTML = '<li>Loading...</li>';
@@ -215,7 +192,7 @@
         async function callGoogleFunction(endpoint, method, data) {
             try {
                 const response = await fetch('https://us-central1-missive-ss-integration.cloudfunctions.net/smartSuiteProxy', {
-                    method: 'POST',
+                    method: 'POST', // Всегда используем POST для вызова функции
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -255,8 +232,8 @@
 
         function updateCard(item) {
             document.getElementById('card-title').textContent = item.title || 'No Title';
-            const linkButton = document.getElementById('card-link');
-            linkButton.onclick = () => window.open(item.s3e0bfef87 || '#', '_blank');
+            const linkElement = document.getElementById('card-link');
+            linkElement.href = item.s3e0bfef87 || '#';
 
             document.getElementById('card-status').value = item.sb2ebbc694?.value || 'backlog';
             document.getElementById('card-stage').value = item.status?.value || 'backlog';
@@ -266,31 +243,9 @@
 
             (item.s7ea226547?.items || []).forEach(task => {
                 const li = document.createElement('li');
-                li.innerHTML = `<input type="checkbox" data-task-id="${task.id}" ${task.completed ? 'checked' : ''}> <span>${task.content.preview}</span>`;
+                li.innerHTML = `<input type="checkbox" disabled ${task.completed ? 'checked' : ''}> <span>${task.content.preview}</span>`;
                 tasksElement.appendChild(li);
-
-                li.querySelector('input').addEventListener('change', (event) => {
-                    updateSmartSuiteField(currentRecordId, `s7ea226547.${task.id}.completed`, event.target.checked);
-                });
             });
-        }
-
-        async function updateSmartSuiteField(recordId, field, value) {
-            const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${recordId}`;
-            const method = 'PATCH';
-            const data = {
-                fields: {
-                    [field]: value
-                }
-            };
-
-            console.log(`Updating ${field} to ${value}`);
-            try {
-                const response = await callGoogleFunction(endpoint, method, { recordId, fields: data.fields });
-                console.log(`Update successful: ${JSON.stringify(response)}`);
-            } catch (error) {
-                console.error(`Error updating field: ${error.message}`);
-            }
         }
 
         document.getElementById('card-status').addEventListener('change', (event) => {
