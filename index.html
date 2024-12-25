@@ -222,8 +222,44 @@
                 const li = document.createElement('li');
                 li.innerHTML = `<input type="checkbox" data-task-id="${task.id}" ${task.completed ? 'checked' : ''}> <span>${task.content.preview}</span>`;
                 tasksElement.appendChild(li);
+
+                li.querySelector('input').addEventListener('change', (event) => {
+                    updateSmartSuiteField(currentRecordId, task.id, event.target.checked);
+                });
             });
         }
+
+        async function updateSmartSuiteField(recordId, field, value) {
+            try {
+                const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${recordId}/update/`;
+                const method = 'POST';
+                const data = {
+                    fields: {
+                        [field]: value
+                    }
+                };
+
+                const response = await fetch('https://us-central1-missive-ss-integration.cloudfunctions.net/smartSuiteProxy', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ endpoint, method, data })
+                });
+
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+                console.log(`Field ${field} updated successfully.`);
+            } catch (error) {
+                console.error(`Error updating field ${field}: ${error.message}`);
+            }
+        }
+
+        document.getElementById('card-status').addEventListener('change', (event) => {
+            updateSmartSuiteField(currentRecordId, 'sb2ebbc694', event.target.value);
+        });
+
+        document.getElementById('card-stage').addEventListener('change', (event) => {
+            updateSmartSuiteField(currentRecordId, 'status', event.target.value);
+        });
     </script>
 </body>
 </html>
