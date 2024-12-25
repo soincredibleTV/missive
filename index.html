@@ -226,7 +226,7 @@
                 tasksElement.appendChild(li);
 
                 li.querySelector('input').addEventListener('change', (event) => {
-                    updateSmartSuiteField(currentRecordId, `s7ea226547.items.${task.id}.completed`, event.target.checked);
+                    updateSmartSuiteField(currentRecordId, `s7ea226547.${task.id}.completed`, event.target.checked);
                 });
             });
         }
