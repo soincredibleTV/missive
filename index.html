@@ -12,7 +12,7 @@
             margin: 0;
             padding: 20px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             height: 100vh;
         }
@@ -24,6 +24,7 @@
             padding: 20px;
             width: 400px;
             text-align: left;
+            margin-bottom: 20px;
         }
 
         .title {
@@ -100,13 +101,15 @@
         }
 
         .tech-details {
-            margin-top: 20px;
+            width: 100%;
+            max-width: 800px;
             background-color: #f4f4f4;
             border: 1px solid #ddd;
             border-radius: 5px;
             padding: 10px;
             max-height: 300px;
             overflow-y: auto;
+            margin-top: 20px;
         }
 
         .tech-details-toggle {
@@ -146,6 +149,28 @@
 
     <script>
         let currentConversationId = null;
+
+        const statusMapping = {
+            "backlog": "Open",
+            "in_progress": "Won",
+            "ready_for_review": "Lost",
+            "dd43aa26-8d5b-4558-9fe8-a51015b1a67e": "Issues"
+        };
+
+        const stageMapping = {
+            "adb874ab-d993-4ea5-bcb7-6d8ef8702eac": "Outreach",
+            "backlog": "New",
+            "in_progress": "Discovery Client",
+            "ready_for_review": "Quote Sent",
+            "46411555-18fb-43c4-9b36-6455b631690d": "Negotiating",
+            "0e428758-78ec-4d57-891b-184e6bdc9b93": "Offer With Talent",
+            "gbMKa": "Contracting",
+            "fe024d93-ae28-4f1d-89b9-4e35472354f4": "Ongoing (?)",
+            "8b177551-6bf2-401e-ad3e-a2b30c66a497": "Being Worked On",
+            "6fd18d6b-fb19-400c-aec6-8ca7d90da205": "Completed",
+            "21dfd029-6d62-46e4-8eef-402c75ea2f2d": "Invoice Sent",
+            "064641c0-6eb0-4091-878f-9e62f1dbadf6": "Invoice Paid"
+        };
 
         // Function to reset card content to loading state
         function resetCard() {
@@ -241,8 +266,11 @@
             linkElement.textContent = item.s3e0bfef87 || 'No Link';
             linkElement.href = item.s3e0bfef87 || '#';
 
-            document.getElementById('card-status').textContent = item.status?.value || 'No Status';
-            document.getElementById('card-stage').textContent = item.sb2ebbc694?.value || 'No Stage';
+            const statusValue = statusMapping[item.sb2ebbc694?.value] || 'Unknown';
+            document.getElementById('card-status').textContent = statusValue;
+
+            const stageValue = stageMapping[item.status?.value] || 'Unknown';
+            document.getElementById('card-stage').textContent = stageValue;
 
             const tasksElement = document.getElementById('card-tasks');
             tasksElement.innerHTML = '';
