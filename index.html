@@ -16,7 +16,6 @@
             align-items: center;
             height: 100vh;
         }
-
         .card {
             background-color: #fff;
             border-radius: 10px;
@@ -26,13 +25,11 @@
             text-align: left;
             margin-bottom: 20px;
         }
-
         .title {
             font-size: 20px;
             font-weight: bold;
             margin-bottom: 15px;
         }
-
         .link {
             display: block;
             background-color: #f4f4f4;
@@ -43,11 +40,9 @@
             text-decoration: none;
             word-wrap: break-word;
         }
-
         .section {
             margin-bottom: 15px;
         }
-
         .section-title {
             font-size: 14px;
             font-weight: bold;
@@ -55,33 +50,27 @@
             color: #666;
             margin-bottom: 5px;
         }
-
         .tasks {
             list-style: none;
             padding: 0;
         }
-
         .tasks li {
             display: flex;
             align-items: center;
             margin-bottom: 5px;
         }
-
         .tasks li input {
             margin-right: 10px;
         }
-
         .tasks li span {
             font-size: 14px;
         }
-
         .no-records {
             font-size: 16px;
             color: #ff6b6b;
             text-align: center;
             margin-top: 20px;
         }
-
         .tech-details {
             width: 100%;
             max-width: 800px;
@@ -203,7 +192,7 @@
             try {
                 const endpoint = '/api/v1/applications/64bea2c89335ca76865eedef/records/list/';
                 const method = 'POST';
-                const data = { limit: 1 };
+                const data = { limit: 2 };
 
                 const result = await callGoogleFunction(endpoint, method, { ...data, filter: { missiveId: conversationId } });
 
@@ -243,9 +232,8 @@
         }
 
         async function updateSmartSuiteField(recordId, field, value) {
-            const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${recordId}/`;
+            const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${recordId}`;
             const method = 'PATCH';
-            const recordId = `${recordId}`;
             const data = {
                 fields: {
                     [field]: value
@@ -254,7 +242,7 @@
 
             console.log(`Updating ${field} to ${value}`);
             try {
-                const response = await callGoogleFunction(endpoint, method, data);
+                const response = await callGoogleFunction(endpoint, method, { recordId, fields: data.fields });
                 console.log(`Update successful: ${JSON.stringify(response)}`);
             } catch (error) {
                 console.error(`Error updating field: ${error.message}`);
