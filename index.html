@@ -32,14 +32,13 @@
         }
         .link {
             display: block;
-            background-color: #007BFF;
-            color: white;
-            text-align: center;
+            background-color: #f4f4f4;
             padding: 10px;
             border-radius: 5px;
             margin-bottom: 20px;
+            color: #007BFF;
             text-decoration: none;
-            font-weight: bold;
+            word-wrap: break-word;
         }
         .section {
             margin-bottom: 15px;
@@ -53,10 +52,9 @@
             display: flex;
             align-items: center;
         }
-        .section-title img {
-            width: 16px;
-            height: 16px;
+        .section-title i {
             margin-right: 8px;
+            color: #666;
         }
         .tasks {
             list-style: none;
@@ -72,9 +70,6 @@
         }
         .tasks li span {
             font-size: 14px;
-        }
-        .tasks li input[disabled] {
-            cursor: not-allowed;
         }
         .no-records {
             font-size: 16px;
@@ -96,49 +91,62 @@
         select {
             width: 100%;
             padding: 10px;
+            border: none;
             border-radius: 5px;
-            border: 1px solid #ccc;
+            appearance: none;
+            background-color: #f4f4f4;
             font-size: 14px;
-            cursor: pointer;
+            font-family: Arial, sans-serif;
+        }
+        select option {
+            padding: 10px;
+        }
+        .status .select {
+            background-color: #fff;
+        }
+        .stage .select {
+            background-color: #fff;
         }
     </style>
 </head>
 <body>
     <div class="card" id="data-card" style="display: none;">
         <div class="title" id="card-title">Loading...</div>
-        <a href="#" class="link" id="card-link">Open in SmartSuite</a>
+        <button id="card-link" class="link">Open in SmartSuite</button>
         <div class="section">
             <div class="section-title">
-                <img src="https://via.placeholder.com/16" alt="Status Icon"> Status
+                <i class="fas fa-list"></i> Status
             </div>
             <select id="card-status" class="status">
-                <option value="backlog" style="background-color: #ccc; color: black;">Open</option>
-                <option value="in_progress" style="background-color: #28a745; color: white;">Won</option>
-                <option value="ready_for_review" style="background-color: #ff5733; color: white;">Lost</option>
-                <option value="dd43aa26-8d5b-4558-9fe8-a51015b1a67e" style="background-color: #dc3545; color: white;">Issues</option>
+                <option value="backlog">Open</option>
+                <option value="in_progress">Won</option>
+                <option value="ready_for_review">Lost</option>
+                <option value="dd43aa26-8d5b-4558-9fe8-a51015b1a67e">Issues</option>
             </select>
         </div>
         <div class="section">
             <div class="section-title">
-                <img src="https://via.placeholder.com/16" alt="Stage Icon"> Stage
+                <i class="fas fa-list"></i> Stage
             </div>
             <select id="card-stage" class="stage">
-                <option value="adb874ab-d993-4ea5-bcb7-6d8ef8702eac" style="background-color: #ffeeba; color: black;">Outreach</option>
-                <option value="backlog" style="background-color: #6c757d; color: white;">New</option>
-                <option value="in_progress" style="background-color: #007bff; color: white;">Discovery Client</option>
-                <option value="ready_for_review" style="background-color: #6610f2; color: white;">Quote Sent</option>
-                <option value="46411555-18fb-43c4-9b36-6455b631690d" style="background-color: #e83e8c; color: white;">Negotiating</option>
-                <option value="0e428758-78ec-4d57-891b-184e6bdc9b93" style="background-color: #ffc107; color: black;">Offer With Talent</option>
-                <option value="gbMKa" style="background-color: #28a745; color: white;">Contracting</option>
-                <option value="fe024d93-ae28-4f1d-89b9-4e35472354f4" style="background-color: #343a40; color: white;">Ongoing (?)</option>
-                <option value="8b177551-6bf2-401e-ad3e-a2b30c66a497" style="background-color: #6f42c1; color: white;">Being Worked On</option>
-                <option value="6fd18d6b-fb19-400c-aec6-8ca7d90da205" style="background-color: #20c997; color: white;">Completed</option>
-                <option value="21dfd029-6d62-46e4-8eef-402c75ea2f2d" style="background-color: #17a2b8; color: white;">Invoice Sent</option>
-                <option value="064641c0-6eb0-4091-878f-9e62f1dbadf6" style="background-color: #d63384; color: white;">Invoice Paid</option>
+                <option value="adb874ab-d993-4ea5-bcb7-6d8ef8702eac">Outreach</option>
+                <option value="backlog">New</option>
+                <option value="in_progress">Discovery Client</option>
+                <option value="ready_for_review">Quote Sent</option>
+                <option value="46411555-18fb-43c4-9b36-6455b631690d">Negotiating</option>
+                <option value="0e428758-78ec-4d57-891b-184e6bdc9b93">Offer With Talent</option>
+                <option value="gbMKa">Contracting</option>
+                <option value="fe024d93-ae28-4f1d-89b9-4e35472354f4">Ongoing (?)</option>
+                <option value="8b177551-6bf2-401e-ad3e-a2b30c66a497">Being Worked On</option>
+                <option value="6fd18d6b-fb19-400c-aec6-8ca7d90da205">Completed</option>
+                <option value="21dfd029-6d62-46e4-8eef-402c75ea2f2d">Invoice Sent</option>
+                <option value="064641c0-6eb0-4091-878f-9e62f1dbadf6">Invoice Paid</option>
             </select>
         </div>
         <div class="section">
-            <div class="section-title">Deal Tasks</div>
+            <div class="section-title">
+                <i class="fas fa-tasks"></i> Deal Tasks
+            </div>
             <ul class="tasks" id="card-tasks">
                 <li>Loading...</li>
             </ul>
@@ -157,6 +165,7 @@
 
         function resetCard() {
             document.getElementById('card-title').textContent = 'Loading...';
+            document.getElementById('card-link').textContent = 'Open in SmartSuite';
             document.getElementById('card-link').href = '#';
             document.getElementById('card-status').value = 'backlog';
             document.getElementById('card-stage').value = 'backlog';
@@ -246,6 +255,24 @@
                 li.innerHTML = `<input type="checkbox" disabled ${task.completed ? 'checked' : ''}> <span>${task.content.preview}</span>`;
                 tasksElement.appendChild(li);
             });
+        }
+
+        async function updateSmartSuiteField(recordId, field, value) {
+            const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${recordId}`;
+            const method = 'PATCH';
+            const data = {
+                fields: {
+                    [field]: value
+                }
+            };
+
+            console.log(`Updating ${field} to ${value}`);
+            try {
+                const response = await callGoogleFunction(endpoint, method, { recordId, fields: data.fields });
+                console.log(`Update successful: ${JSON.stringify(response)}`);
+            } catch (error) {
+                console.error(`Error updating field: ${error.message}`);
+            }
         }
 
         document.getElementById('card-status').addEventListener('change', (event) => {
