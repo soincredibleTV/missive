@@ -240,6 +240,295 @@
         }
 
         function updateCard(item) {
+            document.getElementById('card-title').textContent = item.se63a7f728 || 'No Title';
+            const linkElement = document.getElementById('card-link');
+            linkElement.href = item.s3e0bfef87 || '#';
+
+            document.getElementById('card-status').value = item.sb2ebbc694?.value || 'backlog';
+            document.getElementById('card-stage').value = item.status?.value || 'backlog';
+
+            const tasksElement = document.getElementById('card-tasks');
+            tasksElement.innerHTML = '';
+
+            (item.s7ea226547?.items || []).forEach(task => {
+                const li = document.createElement('li');
+                li.innerHTML = `<input type="checkbox" disabled ${task.completed ? 'checked' : ''}> <span>${task.content.preview}</span>`;
+                tasksElement.appendChild(li);
+            });
+        }
+
+        async function updateSmartSuiteField(recordId, field, value) {
+            const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${recordId}`;
+            const method = 'PATCH';
+            const data = {
+                fields: {
+                    [field]: value
+                }
+            };
+
+            console.log(`Updating ${field} to ${value}`);
+            try {
+                const response = await callGoogleFunction(endpoint, method, { recordId, fields: data.fields });
+                console.log(`Update successful: ${JSON.stringify(response)}`);
+            } catch (error) {
+                console.error(`Error updating field: ${error.message}`);
+            }
+        }
+
+        document.getElementById('card-status').addEventListener('change', (event) => {
+            const newValue = event.target.value;
+            updateSmartSuiteField(currentRecordId, 'sb2ebbc694', newValue);
+        });
+
+        document.getElementById('card-stage').addEventListener('change', (event) => {
+            const newValue = event.target.value;
+            updateSmartSuiteField(currentRecordId, 'status', newValue);
+        });
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missive API and SmartSuite Integration</title>
+    <script src="https://integrations.missiveapp.com/missive.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 400px;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .link {
+            display: block;
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            color: #007BFF;
+            text-decoration: none;
+            word-wrap: break-word;
+        }
+        .section {
+            margin-bottom: 15px;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        .section-title i {
+            margin-right: 8px;
+            color: #666;
+        }
+        .tasks {
+            list-style: none;
+            padding: 0;
+        }
+        .tasks li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .tasks li input {
+            margin-right: 10px;
+        }
+        .tasks li span {
+            font-size: 14px;
+        }
+        .no-records {
+            font-size: 16px;
+            color: #ff6b6b;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .tech-details {
+            width: 100%;
+            max-width: 800px;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            appearance: none;
+            background-color: #f4f4f4;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+        select option {
+            padding: 10px;
+        }
+        .status .select {
+            background-color: #fff;
+        }
+        .stage .select {
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="card" id="data-card" style="display: none;">
+        <div class="title" id="card-title">Loading...</div>
+        <button id="card-link" class="link">Open in SmartSuite</button>
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-list"></i> Status
+            </div>
+            <select id="card-status" class="status">
+                <option value="backlog">Open</option>
+                <option value="in_progress">Won</option>
+                <option value="ready_for_review">Lost</option>
+                <option value="dd43aa26-8d5b-4558-9fe8-a51015b1a67e">Issues</option>
+            </select>
+        </div>
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-list"></i> Stage
+            </div>
+            <select id="card-stage" class="stage">
+                <option value="adb874ab-d993-4ea5-bcb7-6d8ef8702eac">Outreach</option>
+                <option value="backlog">New</option>
+                <option value="in_progress">Discovery Client</option>
+                <option value="ready_for_review">Quote Sent</option>
+                <option value="46411555-18fb-43c4-9b36-6455b631690d">Negotiating</option>
+                <option value="0e428758-78ec-4d57-891b-184e6bdc9b93">Offer With Talent</option>
+                <option value="gbMKa">Contracting</option>
+                <option value="fe024d93-ae28-4f1d-89b9-4e35472354f4">Ongoing (?)</option>
+                <option value="8b177551-6bf2-401e-ad3e-a2b30c66a497">Being Worked On</option>
+                <option value="6fd18d6b-fb19-400c-aec6-8ca7d90da205">Completed</option>
+                <option value="21dfd029-6d62-46e4-8eef-402c75ea2f2d">Invoice Sent</option>
+                <option value="064641c0-6eb0-4091-878f-9e62f1dbadf6">Invoice Paid</option>
+            </select>
+        </div>
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-tasks"></i> Deal Tasks
+            </div>
+            <ul class="tasks" id="card-tasks">
+                <li>Loading...</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="no-records" id="no-records" style="display: none;">
+        Ooops, we can't find corresponding record in SmartSuite.
+    </div>
+
+    <div class="tech-details" id="tech-details" style="display: none;"></div>
+
+    <script>
+        let currentConversationId = null;
+        let currentRecordId = null;
+
+        function resetCard() {
+            document.getElementById('card-title').textContent = 'Loading...';
+            document.getElementById('card-link').textContent = 'Open in SmartSuite';
+            document.getElementById('card-link').href = '#';
+            document.getElementById('card-status').value = 'backlog';
+            document.getElementById('card-stage').value = 'backlog';
+            document.getElementById('card-tasks').innerHTML = '<li>Loading...</li>';
+        }
+
+        function toggleVisibility(visible) {
+            const card = document.getElementById('data-card');
+            const noRecords = document.getElementById('no-records');
+            card.style.display = visible ? 'block' : 'none';
+            noRecords.style.display = visible ? 'none' : 'block';
+        }
+
+        Missive.on('change:conversations', (ids) => {
+            Missive.fetchConversations(ids).then((conversations) => {
+                if (conversations.length !== 1) {
+                    resetCard();
+                    toggleVisibility(false);
+                    return;
+                }
+
+                const conversationId = conversations[0].id;
+                if (currentConversationId === conversationId) return;
+
+                currentConversationId = conversationId;
+                resetCard();
+                toggleVisibility(true);
+
+                fetchFromGoogleCloud(conversationId);
+            });
+        });
+
+        async function callGoogleFunction(endpoint, method, data) {
+            try {
+                const response = await fetch('https://us-central1-missive-ss-integration.cloudfunctions.net/smartSuiteProxy', {
+                    method: 'POST', // Всегда используем POST для вызова функции
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ endpoint, method, data })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error(`Error during API call: ${error.message}`);
+                throw error;
+            }
+        }
+
+        async function fetchFromGoogleCloud(conversationId) {
+            try {
+                const endpoint = '/api/v1/applications/64bea2c89335ca76865eedef/records/list/';
+                const method = 'POST';
+                const data = { limit: 2 };
+
+                const result = await callGoogleFunction(endpoint, method, { ...data, filter: { missiveId: conversationId } });
+
+                if (result.items.length === 0) {
+                    toggleVisibility(false);
+                } else {
+                    currentRecordId = result.items[0].id;
+                    updateCard(result.items[0]);
+                }
+            } catch (error) {
+                console.error(error.message);
+                toggleVisibility(false);
+            }
+        }
+
+        function updateCard(item) {
             document.getElementById('card-title').textContent = item.title || 'No Title';
             const linkElement = document.getElementById('card-link');
             linkElement.href = item.s3e0bfef87 || '#';
