@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Missive API and SmartSuite Integration (Version: 6)</title>
+    <title>Missive API and SmartSuite Integration (Version: 7)</title>
     <script src="https://integrations.missiveapp.com/missive.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
@@ -93,7 +93,7 @@
 </head>
 <body>
     <div class="card" id="data-card" style="display: none;">
-        <div class="title" id="card-version">Version: 6</div>
+        <div class="title" id="card-version">Version: 7</div>
         <div class="title" id="card-title">Loading...</div>
         <button class="link-button" id="card-link-button" style="display: none;">Open in SmartSuite</button>
         <div class="section">
@@ -242,12 +242,12 @@
 
         async function updateChecklistField(taskId, newCompletedStatus) {
             try {
-                const updatedChecklist = {
-                    ...currentChecklist,
-                    items: currentChecklist.items.map(item =>
-                        item.id === taskId ? { ...item, completed: newCompletedStatus } : item
-                    )
-                };
+                // Обновляем локально только изменённый элемент
+                currentChecklist.items = currentChecklist.items.map(item =>
+                    item.id === taskId ? { ...item, completed: newCompletedStatus } : item
+                );
+
+                const updatedChecklist = { ...currentChecklist };
 
                 const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${currentRecordId}`;
                 const method = 'PATCH';
@@ -255,7 +255,6 @@
 
                 await callGoogleFunction(endpoint, method, data);
                 console.log(`Checklist updated for task ${taskId}`);
-                currentChecklist = updatedChecklist;
             } catch (error) {
                 console.error(`Error updating checklist: ${error.message}`);
             }
