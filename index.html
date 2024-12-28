@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Missive API and SmartSuite Integration (Version: 5)</title>
+    <title>Missive API and SmartSuite Integration (Version: 6)</title>
     <script src="https://integrations.missiveapp.com/missive.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
@@ -93,7 +93,7 @@
 </head>
 <body>
     <div class="card" id="data-card" style="display: none;">
-        <div class="title" id="card-version">Version: 5</div>
+        <div class="title" id="card-version">Version: 6</div>
         <div class="title" id="card-title">Loading...</div>
         <button class="link-button" id="card-link-button" style="display: none;">Open in SmartSuite</button>
         <div class="section">
@@ -218,7 +218,7 @@
         }
 
         function updateCard(item) {
-            document.getElementById('card-title').textContent = item.title || 'No Title';
+            document.getElementById('card-title').textContent = item.s78ba1a556 || 'No Title';
             const linkButton = document.getElementById('card-link-button');
             linkButton.style.display = 'inline-block';
             linkButton.onclick = () => window.open(item.s3e0bfef87 || '#', '_blank');
