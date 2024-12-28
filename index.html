@@ -242,7 +242,7 @@
                 };
 
                 const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${currentRecordId}`;
-                const method = 'PUT';
+                const method = 'PATCH';
                 const data = { fields: { [checklistField]: updatedChecklist } };
 
                 await callGoogleFunction(endpoint, method, data);
@@ -261,6 +261,19 @@
             const newValue = event.target.value;
             updateSmartSuiteField(currentRecordId, 'status', newValue);
         });
+
+        async function updateSmartSuiteField(recordId, field, value) {
+            try {
+                const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${recordId}`;
+                const method = 'PATCH';
+                const data = { fields: { [field]: value } };
+
+                await callGoogleFunction(endpoint, method, data);
+                console.log(`${field} updated to ${value}`);
+            } catch (error) {
+                console.error(`Error updating field ${field}: ${error.message}`);
+            }
+        }
     </script>
 </body>
 </html>
