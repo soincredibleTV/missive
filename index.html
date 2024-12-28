@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Missive API and SmartSuite Integration (Version: 9)</title>
+    <title>Missive API and SmartSuite Integration (Version: 10)</title>
     <script src="https://integrations.missiveapp.com/missive.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
@@ -50,7 +50,6 @@
             border-radius: 5px;
             border: none;
             color: white;
-            background-color: #6c757d; /* Default gray for "Open" */
             appearance: none;
             outline: none;
             cursor: pointer;
@@ -79,6 +78,7 @@
             color: white;
             font-size: 16px;
             padding: 10px;
+            height: 50px; /* Matching the height of the main select */
             text-align: center;
         }
         select.status option.open { background-color: #6c757d; } /* Gray */
@@ -122,7 +122,7 @@
 </head>
 <body>
     <div class="card" id="data-card" style="display: none;">
-        <div class="title" id="card-version">Version: 9</div>
+        <div class="title" id="card-version">Version: 10</div>
         <div class="title" id="card-title">Loading...</div>
         <div class="section">
             <div class="section-title">Status</div>
@@ -193,6 +193,13 @@
             }
         }
 
+        function updateStatusClass(newStatus) {
+            const statusElement = document.getElementById('card-status');
+            if (statusElement) {
+                statusElement.className = `status ${newStatus}`;
+            }
+        }
+
         Missive.on('change:conversations', (ids) => {
             Missive.fetchConversations(ids).then((conversations) => {
                 if (conversations.length !== 1) {
@@ -255,15 +262,15 @@
         }
 
         function updateCard(item) {
-            document.getElementById('card-title').textContent = item.s78ba1a556 || 'No Title';
-            const linkButton = document.getElementById('card-link-button');
-            if (linkButton) {
-                linkButton.style.display = 'inline-block';
-                linkButton.onclick = () => window.open(item.s3e0bfef87 || '#', '_blank');
-            }
+            const titleElement = document.getElementById('card-title');
+            const statusElement = document.getElementById('card-status');
 
-            document.getElementById('card-status').value = item.sb2ebbc694?.value || 'backlog';
-            document.getElementById('card-stage').value = item.status?.value || 'backlog';
+            if (titleElement) titleElement.textContent = item.s78ba1a556 || 'No Title';
+
+            if (statusElement) {
+                statusElement.value = item.sb2ebbc694?.value || 'backlog';
+                updateStatusClass(statusElement.options[statusElement.selectedIndex].className);
+            }
 
             const tasksElement = document.getElementById('card-tasks');
             if (tasksElement) {
