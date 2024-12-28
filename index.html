@@ -376,4 +376,23 @@
                 const data = { recordId, fields: { [field]: value } };
 
                 await callGoogleFunction(endpoint, method, data);
-                console.log(`${field} updated
+                console.log(`${field} updated to ${value}`);
+            } catch (error) {
+                console.error(`Error updating field ${field}: ${error.message}`);
+            }
+        }
+
+        document.getElementById('card-status').addEventListener('change', (event) => {
+            const newValue = event.target.value;
+            updateSmartSuiteField(currentRecordId, 'sb2ebbc694', newValue);
+            updateStatusClass(event.target.options[event.target.selectedIndex].className);
+        });
+
+        document.getElementById('card-stage').addEventListener('change', (event) => {
+            const newValue = event.target.value;
+            updateSmartSuiteField(currentRecordId, 'status', newValue);
+            updateStageClass(event.target.options[event.target.selectedIndex].className);
+        });
+    </script>
+</body>
+</html>
