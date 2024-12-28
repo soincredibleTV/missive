@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Missive API and SmartSuite Integration (Version: 10)</title>
+    <title>Missive API and SmartSuite Integration (Version: 11)</title>
     <script src="https://integrations.missiveapp.com/missive.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
@@ -41,7 +41,7 @@
             color: #666;
             margin-bottom: 5px;
         }
-        .status {
+        .status, .stage {
             position: relative;
             display: inline-block;
             width: 100%;
@@ -55,7 +55,7 @@
             cursor: pointer;
             text-align: center;
         }
-        .status::after {
+        .status::after, .stage::after {
             content: '\25BC'; /* Down arrow */
             position: absolute;
             right: 10px;
@@ -70,11 +70,20 @@
         .status.lost { background-color: #fd7e14; } /* Orange */
         .status.issues { background-color: #dc3545; } /* Red */
 
-        .status:focus {
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-        }
+        .stage.outreach { background-color: #FFEDB3; } /* Outreach */
+        .stage.new { background-color: #6c757d; } /* New */
+        .stage.discovery { background-color: #00aaff; } /* Discovery Client */
+        .stage.quote { background-color: #2C73D2; } /* Quote Sent */
+        .stage.negotiating { background-color: #E64363; } /* Negotiating */
+        .stage.offer { background-color: #FFC107; } /* Offer With Talent */
+        .stage.contracting { background-color: #C8E6C9; } /* Contracting */
+        .stage.ongoing { background-color: #5D4037; } /* Ongoing (?) */
+        .stage.working { background-color: #673AB7; } /* Being Worked On */
+        .stage.completed { background-color: #26A69A; } /* Completed */
+        .stage.invoice_sent { background-color: #007BFF; } /* Invoice Sent */
+        .stage.invoice_paid { background-color: #D1C4E9; } /* Invoice Paid */
 
-        select.status option {
+        select.status option, select.stage option {
             color: white;
             font-size: 16px;
             padding: 10px;
@@ -85,6 +94,19 @@
         select.status option.won { background-color: #28a745; } /* Green */
         select.status option.lost { background-color: #fd7e14; } /* Orange */
         select.status option.issues { background-color: #dc3545; } /* Red */
+
+        select.stage option.outreach { background-color: #FFEDB3; } /* Outreach */
+        select.stage option.new { background-color: #6c757d; } /* New */
+        select.stage option.discovery { background-color: #00aaff; } /* Discovery Client */
+        select.stage option.quote { background-color: #2C73D2; } /* Quote Sent */
+        select.stage option.negotiating { background-color: #E64363; } /* Negotiating */
+        select.stage option.offer { background-color: #FFC107; } /* Offer With Talent */
+        select.stage option.contracting { background-color: #C8E6C9; } /* Contracting */
+        select.stage option.ongoing { background-color: #5D4037; } /* Ongoing (?) */
+        select.stage option.working { background-color: #673AB7; } /* Being Worked On */
+        select.stage option.completed { background-color: #26A69A; } /* Completed */
+        select.stage option.invoice_sent { background-color: #007BFF; } /* Invoice Sent */
+        select.stage option.invoice_paid { background-color: #D1C4E9; } /* Invoice Paid */
 
         .tasks {
             list-style: none;
@@ -122,7 +144,7 @@
 </head>
 <body>
     <div class="card" id="data-card" style="display: none;">
-        <div class="title" id="card-version">Version: 10</div>
+        <div class="title" id="card-version">Version: 11</div>
         <div class="title" id="card-title">Loading...</div>
         <div class="section">
             <div class="section-title">Status</div>
@@ -135,19 +157,19 @@
         </div>
         <div class="section">
             <div class="section-title">Stage</div>
-            <select id="card-stage" class="stage">
-                <option value="adb874ab-d993-4ea5-bcb7-6d8ef8702eac">Outreach</option>
-                <option value="backlog">New</option>
-                <option value="in_progress">Discovery Client</option>
-                <option value="ready_for_review">Quote Sent</option>
-                <option value="46411555-18fb-43c4-9b36-6455b631690d">Negotiating</option>
-                <option value="0e428758-78ec-4d57-891b-184e6bdc9b93">Offer With Talent</option>
-                <option value="gbMKa">Contracting</option>
-                <option value="fe024d93-ae28-4f1d-89b9-4e35472354f4">Ongoing (?)</option>
-                <option value="8b177551-6bf2-401e-ad3e-a2b30c66a497">Being Worked On</option>
-                <option value="6fd18d6b-fb19-400c-aec6-8ca7d90da205">Completed</option>
-                <option value="21dfd029-6d62-46e4-8eef-402c75ea2f2d">Invoice Sent</option>
-                <option value="064641c0-6eb0-4091-878f-9e62f1dbadf6">Invoice Paid</option>
+            <select id="card-stage" class="stage outreach">
+                <option value="adb874ab-d993-4ea5-bcb7-6d8ef8702eac" class="outreach">Outreach</option>
+                <option value="backlog" class="new">New</option>
+                <option value="in_progress" class="discovery">Discovery Client</option>
+                <option value="ready_for_review" class="quote">Quote Sent</option>
+                <option value="46411555-18fb-43c4-9b36-6455b631690d" class="negotiating">Negotiating</option>
+                <option value="0e428758-78ec-4d57-891b-184e6bdc9b93" class="offer">Offer With Talent</option>
+                <option value="gbMKa" class="contracting">Contracting</option>
+                <option value="fe024d93-ae28-4f1d-89b9-4e35472354f4" class="ongoing">Ongoing (?)</option>
+                <option value="8b177551-6bf2-401e-ad3e-a2b30c66a497" class="working">Being Worked On</option>
+                <option value="6fd18d6b-fb19-400c-aec6-8ca7d90da205" class="completed">Completed</option>
+                <option value="21dfd029-6d62-46e4-8eef-402c75ea2f2d" class="invoice_sent">Invoice Sent</option>
+                <option value="064641c0-6eb0-4091-878f-9e62f1dbadf6" class="invoice_paid">Invoice Paid</option>
             </select>
         </div>
         <div class="section">
@@ -172,10 +194,12 @@
         function resetCard() {
             const title = document.getElementById('card-title');
             const status = document.getElementById('card-status');
+            const stage = document.getElementById('card-stage');
             const tasks = document.getElementById('card-tasks');
-            if (title && status && tasks) {
+            if (title && status && tasks && stage) {
                 title.textContent = 'Loading...';
                 status.className = 'status open';
+                stage.className = 'stage outreach';
                 tasks.innerHTML = '<li>Loading...</li>';
             } else {
                 console.error('resetCard: Elements not found!');
@@ -197,6 +221,13 @@
             const statusElement = document.getElementById('card-status');
             if (statusElement) {
                 statusElement.className = `status ${newStatus}`;
+            }
+        }
+
+        function updateStageClass(newStage) {
+            const stageElement = document.getElementById('card-stage');
+            if (stageElement) {
+                stageElement.className = `stage ${newStage}`;
             }
         }
 
@@ -264,12 +295,18 @@
         function updateCard(item) {
             const titleElement = document.getElementById('card-title');
             const statusElement = document.getElementById('card-status');
+            const stageElement = document.getElementById('card-stage');
 
             if (titleElement) titleElement.textContent = item.s78ba1a556 || 'No Title';
 
             if (statusElement) {
                 statusElement.value = item.sb2ebbc694?.value || 'backlog';
                 updateStatusClass(statusElement.options[statusElement.selectedIndex].className);
+            }
+
+            if (stageElement) {
+                stageElement.value = item.status?.value || 'adb874ab-d993-4ea5-bcb7-6d8ef8702eac';
+                updateStageClass(stageElement.options[stageElement.selectedIndex].className);
             }
 
             const tasksElement = document.getElementById('card-tasks');
@@ -329,6 +366,7 @@
         document.getElementById('card-stage').addEventListener('change', (event) => {
             const newValue = event.target.value;
             updateSmartSuiteField(currentRecordId, 'status', newValue);
+            updateStageClass(event.target.options[event.target.selectedIndex].className);
         });
     </script>
 </body>
