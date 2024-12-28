@@ -170,16 +170,27 @@
         let currentChecklist = null;
 
         function resetCard() {
-            document.getElementById('card-title').textContent = 'Loading...';
-            document.getElementById('card-status').className = 'status open';
-            document.getElementById('card-tasks').innerHTML = '<li>Loading...</li>';
+            const title = document.getElementById('card-title');
+            const status = document.getElementById('card-status');
+            const tasks = document.getElementById('card-tasks');
+            if (title && status && tasks) {
+                title.textContent = 'Loading...';
+                status.className = 'status open';
+                tasks.innerHTML = '<li>Loading...</li>';
+            } else {
+                console.error('resetCard: Elements not found!');
+            }
         }
 
         function toggleVisibility(visible) {
             const card = document.getElementById('data-card');
             const noRecords = document.getElementById('no-records');
-            card.style.display = visible ? 'block' : 'none';
-            noRecords.style.display = visible ? 'none' : 'block';
+            if (card && noRecords) {
+                card.style.display = visible ? 'block' : 'none';
+                noRecords.style.display = visible ? 'none' : 'block';
+            } else {
+                console.error('toggleVisibility: Elements not found!');
+            }
         }
 
         Missive.on('change:conversations', (ids) => {
@@ -246,29 +257,32 @@
         function updateCard(item) {
             document.getElementById('card-title').textContent = item.s78ba1a556 || 'No Title';
             const linkButton = document.getElementById('card-link-button');
-            linkButton.style.display = 'inline-block';
-            linkButton.onclick = () => window.open(item.s3e0bfef87 || '#', '_blank');
+            if (linkButton) {
+                linkButton.style.display = 'inline-block';
+                linkButton.onclick = () => window.open(item.s3e0bfef87 || '#', '_blank');
+            }
 
             document.getElementById('card-status').value = item.sb2ebbc694?.value || 'backlog';
             document.getElementById('card-stage').value = item.status?.value || 'backlog';
 
             const tasksElement = document.getElementById('card-tasks');
-            tasksElement.innerHTML = '';
+            if (tasksElement) {
+                tasksElement.innerHTML = '';
 
-            (item.s7ea226547?.items || []).forEach(task => {
-                const li = document.createElement('li');
-                li.innerHTML = `<input type="checkbox" data-task-id="${task.id}" ${task.completed ? 'checked' : ''}> <span>${task.content.preview}</span>`;
-                tasksElement.appendChild(li);
+                (item.s7ea226547?.items || []).forEach(task => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<input type="checkbox" data-task-id="${task.id}" ${task.completed ? 'checked' : ''}> <span>${task.content.preview}</span>`;
+                    tasksElement.appendChild(li);
 
-                li.querySelector('input').addEventListener('change', (event) => {
-                    updateChecklistField(task.id, event.target.checked);
+                    li.querySelector('input').addEventListener('change', (event) => {
+                        updateChecklistField(task.id, event.target.checked);
+                    });
                 });
-            });
+            }
         }
 
         async function updateChecklistField(taskId, newCompletedStatus) {
             try {
-                // Обновляем локально только изменённый элемент
                 currentChecklist.items = currentChecklist.items.map(item =>
                     item.id === taskId ? { ...item, completed: newCompletedStatus } : item
                 );
