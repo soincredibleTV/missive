@@ -32,6 +32,21 @@
             margin-bottom: 15px;
             text-align: center;
         }
+        .link-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 14px;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .link-button:hover {
+            background-color: #0056b3;
+        }
         .section {
             margin-bottom: 15px;
         }
@@ -146,6 +161,7 @@
 <body>
     <div class="card" id="data-card" style="display: none;">
         <div class="title" id="card-title">Loading...</div>
+        <a id="card-link-button" href="#" class="link-button" target="_blank" style="display: none;">Open in SmartSuite</a>
         <div class="section">
             <div class="section-title">Status</div>
             <select id="card-status" class="status open">
@@ -196,11 +212,14 @@
             const status = document.getElementById('card-status');
             const stage = document.getElementById('card-stage');
             const tasks = document.getElementById('card-tasks');
-            if (title && status && tasks && stage) {
+            const linkButton = document.getElementById('card-link-button');
+            if (title && status && tasks && stage && linkButton) {
                 title.textContent = 'Loading...';
                 status.className = 'status open';
                 stage.className = 'stage outreach';
                 tasks.innerHTML = '<li>Loading...</li>';
+                linkButton.style.display = 'none';
+                linkButton.href = '#';
             } else {
                 console.error('resetCard: Elements not found!');
             }
@@ -296,6 +315,7 @@
             const titleElement = document.getElementById('card-title');
             const statusElement = document.getElementById('card-status');
             const stageElement = document.getElementById('card-stage');
+            const linkButton = document.getElementById('card-link-button');
 
             if (titleElement) titleElement.textContent = item.s78ba1a556 || 'No Title';
 
@@ -307,6 +327,11 @@
             if (stageElement) {
                 stageElement.value = item.status?.value || 'adb874ab-d993-4ea5-bcb7-6d8ef8702eac';
                 updateStageClass(stageElement.options[stageElement.selectedIndex].className);
+            }
+
+            if (linkButton) {
+                linkButton.style.display = 'inline-block';
+                linkButton.href = item.s3e0bfef87 || '#';
             }
 
             const tasksElement = document.getElementById('card-tasks');
@@ -351,23 +376,4 @@
                 const data = { recordId, fields: { [field]: value } };
 
                 await callGoogleFunction(endpoint, method, data);
-                console.log(`${field} updated to ${value}`);
-            } catch (error) {
-                console.error(`Error updating field ${field}: ${error.message}`);
-            }
-        }
-
-        document.getElementById('card-status').addEventListener('change', (event) => {
-            const newValue = event.target.value;
-            updateSmartSuiteField(currentRecordId, 'sb2ebbc694', newValue);
-            updateStatusClass(event.target.options[event.target.selectedIndex].className);
-        });
-
-        document.getElementById('card-stage').addEventListener('change', (event) => {
-            const newValue = event.target.value;
-            updateSmartSuiteField(currentRecordId, 'status', newValue);
-            updateStageClass(event.target.options[event.target.selectedIndex].className);
-        });
-    </script>
-</body>
-</html>
+                console.log(`${field} updated
