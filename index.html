@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Missive API and SmartSuite Integration</title>
+    <title>Missive API and SmartSuite Integration (Version: 4)</title>
     <script src="https://integrations.missiveapp.com/missive.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
@@ -132,6 +132,7 @@
     <script>
         let currentConversationId = null;
         let currentRecordId = null;
+        let currentChecklist = null;
 
         function resetCard() {
             document.getElementById('card-title').textContent = 'Loading...';
@@ -171,7 +172,7 @@
         async function callGoogleFunction(endpoint, method, data) {
             try {
                 const response = await fetch('https://us-central1-missive-ss-integration.cloudfunctions.net/smartSuiteProxy', {
-                    method: 'POST', // Всегда используем POST для вызова функции
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -201,6 +202,7 @@
                     toggleVisibility(false);
                 } else {
                     currentRecordId = result.items[0].id;
+                    currentChecklist = result.items[0].s7ea226547;
                     updateCard(result.items[0]);
                 }
             } catch (error) {
@@ -243,24 +245,15 @@
 
                 const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${currentRecordId}`;
                 const method = 'PATCH';
-                const data = { fields: { [checklistField]: updatedChecklist } };
+                const data = { fields: { s7ea226547: updatedChecklist } };
 
                 await callGoogleFunction(endpoint, method, data);
                 console.log(`Checklist updated for task ${taskId}`);
+                currentChecklist = updatedChecklist;
             } catch (error) {
                 console.error(`Error updating checklist: ${error.message}`);
             }
         }
-
-        document.getElementById('card-status').addEventListener('change', (event) => {
-            const newValue = event.target.value;
-            updateSmartSuiteField(currentRecordId, 'sb2ebbc694', newValue);
-        });
-
-        document.getElementById('card-stage').addEventListener('change', (event) => {
-            const newValue = event.target.value;
-            updateSmartSuiteField(currentRecordId, 'status', newValue);
-        });
 
         async function updateSmartSuiteField(recordId, field, value) {
             try {
@@ -274,6 +267,16 @@
                 console.error(`Error updating field ${field}: ${error.message}`);
             }
         }
+
+        document.getElementById('card-status').addEventListener('change', (event) => {
+            const newValue = event.target.value;
+            updateSmartSuiteField(currentRecordId, 'sb2ebbc694', newValue);
+        });
+
+        document.getElementById('card-stage').addEventListener('change', (event) => {
+            const newValue = event.target.value;
+            updateSmartSuiteField(currentRecordId, 'status', newValue);
+        });
     </script>
 </body>
 </html>
