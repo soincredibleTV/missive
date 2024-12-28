@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Missive API and SmartSuite Integration (Version: 8)</title>
+    <title>Missive API and SmartSuite Integration (Version: 9)</title>
     <script src="https://integrations.missiveapp.com/missive.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
@@ -25,7 +25,6 @@
             width: 400px;
             text-align: left;
             margin-bottom: 20px;
-            display: block; /* Temporary override to ensure visibility */
         }
         .title {
             font-size: 20px;
@@ -57,6 +56,16 @@
             cursor: pointer;
             text-align: center;
         }
+        .status::after {
+            content: '\25BC'; /* Down arrow */
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            font-size: 12px;
+            color: white;
+        }
         .status.open { background-color: #6c757d; } /* Gray */
         .status.won { background-color: #28a745; } /* Green */
         .status.lost { background-color: #fd7e14; } /* Orange */
@@ -67,9 +76,15 @@
         }
 
         select.status option {
-            background-color: #f8f9fa; /* Light background for options */
-            color: black;
+            color: white;
+            font-size: 16px;
+            padding: 10px;
+            text-align: center;
         }
+        select.status option.open { background-color: #6c757d; } /* Gray */
+        select.status option.won { background-color: #28a745; } /* Green */
+        select.status option.lost { background-color: #fd7e14; } /* Orange */
+        select.status option.issues { background-color: #dc3545; } /* Red */
 
         .tasks {
             list-style: none;
@@ -106,8 +121,8 @@
     </style>
 </head>
 <body>
-    <div class="card" id="data-card">
-        <div class="title" id="card-version">Version: 8</div>
+    <div class="card" id="data-card" style="display: none;">
+        <div class="title" id="card-version">Version: 9</div>
         <div class="title" id="card-title">Loading...</div>
         <div class="section">
             <div class="section-title">Status</div>
@@ -167,29 +182,24 @@
             noRecords.style.display = visible ? 'none' : 'block';
         }
 
-        function updateStatusClass(value) {
-            const statusElement = document.getElementById('card-status');
-            statusElement.className = `status ${value}`;
-        }
+        Missive.on('change:conversations', (ids) => {
+            Missive.fetchConversations(ids).then((conversations) => {
+                if (conversations.length !== 1) {
+                    resetCard();
+                    toggleVisibility(false);
+                    return;
+                }
 
-        document.getElementById('card-status').addEventListener('change', (event) => {
-            const newValue = event.target.value;
-            updateSmartSuiteField(currentRecordId, 'sb2ebbc694', newValue);
-            updateStatusClass(event.target.options[event.target.selectedIndex].className);
+                const conversationId = conversations[0].id;
+                if (currentConversationId === conversationId) return;
+
+                currentConversationId = conversationId;
+                resetCard();
+                toggleVisibility(true);
+
+                fetchFromGoogleCloud(conversationId);
+            });
         });
-
-        async function updateSmartSuiteField(recordId, field, value) {
-            try {
-                const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${recordId}`;
-                const method = 'PATCH';
-                const data = { recordId, fields: { [field]: value } };
-
-                await callGoogleFunction(endpoint, method, data);
-                console.log(`${field} updated to ${value}`);
-            } catch (error) {
-                console.error(`Error updating field ${field}: ${error.message}`);
-            }
-        }
 
         async function callGoogleFunction(endpoint, method, data) {
             try {
@@ -211,6 +221,94 @@
                 throw error;
             }
         }
+
+        async function fetchFromGoogleCloud(conversationId) {
+            try {
+                const endpoint = '/api/v1/applications/64bea2c89335ca76865eedef/records/list/';
+                const method = 'POST';
+                const data = { limit: 2 };
+
+                const result = await callGoogleFunction(endpoint, method, { ...data, filter: { missiveId: conversationId } });
+
+                if (result.items.length === 0) {
+                    toggleVisibility(false);
+                } else {
+                    currentRecordId = result.items[0].id;
+                    currentChecklist = result.items[0].s7ea226547;
+                    updateCard(result.items[0]);
+                }
+            } catch (error) {
+                console.error(error.message);
+                toggleVisibility(false);
+            }
+        }
+
+        function updateCard(item) {
+            document.getElementById('card-title').textContent = item.s78ba1a556 || 'No Title';
+            const linkButton = document.getElementById('card-link-button');
+            linkButton.style.display = 'inline-block';
+            linkButton.onclick = () => window.open(item.s3e0bfef87 || '#', '_blank');
+
+            document.getElementById('card-status').value = item.sb2ebbc694?.value || 'backlog';
+            document.getElementById('card-stage').value = item.status?.value || 'backlog';
+
+            const tasksElement = document.getElementById('card-tasks');
+            tasksElement.innerHTML = '';
+
+            (item.s7ea226547?.items || []).forEach(task => {
+                const li = document.createElement('li');
+                li.innerHTML = `<input type="checkbox" data-task-id="${task.id}" ${task.completed ? 'checked' : ''}> <span>${task.content.preview}</span>`;
+                tasksElement.appendChild(li);
+
+                li.querySelector('input').addEventListener('change', (event) => {
+                    updateChecklistField(task.id, event.target.checked);
+                });
+            });
+        }
+
+        async function updateChecklistField(taskId, newCompletedStatus) {
+            try {
+                // Обновляем локально только изменённый элемент
+                currentChecklist.items = currentChecklist.items.map(item =>
+                    item.id === taskId ? { ...item, completed: newCompletedStatus } : item
+                );
+
+                const updatedChecklist = { ...currentChecklist };
+
+                const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${currentRecordId}`;
+                const method = 'PATCH';
+                const data = { recordId: currentRecordId, fields: { s7ea226547: updatedChecklist } };
+
+                await callGoogleFunction(endpoint, method, data);
+                console.log(`Checklist updated for task ${taskId}`);
+            } catch (error) {
+                console.error(`Error updating checklist: ${error.message}`);
+            }
+        }
+
+        async function updateSmartSuiteField(recordId, field, value) {
+            try {
+                const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${recordId}`;
+                const method = 'PATCH';
+                const data = { recordId, fields: { [field]: value } };
+
+                await callGoogleFunction(endpoint, method, data);
+                console.log(`${field} updated to ${value}`);
+            } catch (error) {
+                console.error(`Error updating field ${field}: ${error.message}`);
+            }
+        }
+
+        document.getElementById('card-status').addEventListener('change', (event) => {
+            const newValue = event.target.value;
+            updateSmartSuiteField(currentRecordId, 'sb2ebbc694', newValue);
+            updateStatusClass(event.target.options[event.target.selectedIndex].className);
+        });
+
+        document.getElementById('card-stage').addEventListener('change', (event) => {
+            const newValue = event.target.value;
+            updateSmartSuiteField(currentRecordId, 'status', newValue);
+        });
     </script>
 </body>
 </html>
