@@ -12,11 +12,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             const conversationId = conversations[0].id;
+            console.log("Current Conversation ID:", conversationId);  // Adding console log for debugging
             if (currentConversationId === conversationId) return;
             currentConversationId = conversationId;
             resetCard();
             toggleVisibility(true);
-            fetchFromGoogleCloud(conversationId);
+            fetchFromGoogleCloud(conversationId);  // Ensure this function is correctly called with conversationId
         });
     });
 
