@@ -175,11 +175,3 @@ document.addEventListener('DOMContentLoaded', function() {
         updateStageClass(event.target.options[event.target.selectedIndex].className);
     });
 });
-"""
-
-# Saving the updated JavaScript content to a file
-updated_js_path = "/mnt/data/updated_script_handling_html.js"
-with open(updated_js_path, "w") as js_file:
-    js_file.write(updated_js_content_with_html_handling)
-
-updated_js_path &#8203;:contentReference[oaicite:0]{index=0}&#8203;
