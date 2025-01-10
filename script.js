@@ -118,6 +118,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (linkButton) {
             linkButton.style.display = 'inline-block';
             linkButton.href = item.s3e0bfef87 || '#';
+            // Ensure it's treated as HTML
+            linkButton.innerHTML = '<span>Open in SmartSuite</span>';
         }
         const tasksElement = document.getElementById('card-tasks');
         tasksElement.innerHTML = '';
@@ -173,3 +175,11 @@ document.addEventListener('DOMContentLoaded', function() {
         updateStageClass(event.target.options[event.target.selectedIndex].className);
     });
 });
+"""
+
+# Saving the updated JavaScript content to a file
+updated_js_path = "/mnt/data/updated_script_handling_html.js"
+with open(updated_js_path, "w") as js_file:
+    js_file.write(updated_js_content_with_html_handling)
+
+updated_js_path &#8203;:contentReference[oaicite:0]{index=0}&#8203;
