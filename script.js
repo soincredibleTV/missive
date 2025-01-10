@@ -1,6 +1,3 @@
-# Generating the updated JavaScript file with the correct handling to avoid errors
-
-updated_js_content = """
 document.addEventListener('DOMContentLoaded', function() {
     let currentConversationId = null;
     let currentRecordId = null;
