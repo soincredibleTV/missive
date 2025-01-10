@@ -1,5 +1,4 @@
-
-function updateCard(item) {
+export function updateCard(item) {
     const titleElement = document.getElementById('card-title');
     const statusElement = document.getElementById('card-status');
     const stageElement = document.getElementById('card-stage');
@@ -20,14 +19,14 @@ function updateCard(item) {
     }
 }
 
-function updateStatusClass(newStatus) {
+export function updateStatusClass(newStatus) {
     const statusElement = document.getElementById('card-status');
     if (statusElement) {
         statusElement.className = 'status ' + newStatus;
     }
 }
 
-function updateStageClass(newStage) {
+export function updateStageClass(newStage) {
     const stageElement = document.getElementById('card-stage');
     if (stageElement) {
         stageElement.className = 'stage ' + newStage;
