@@ -175,3 +175,4 @@ document.addEventListener('DOMContentLoaded', function() {
         updateStageClass(event.target.options[event.target.selectedIndex].className);
     });
 });
+
