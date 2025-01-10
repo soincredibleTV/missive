@@ -1,5 +1,6 @@
 import { fetchFromGoogleCloud, callGoogleFunction } from './core.js';
-import { updateCard, updateStatusClass, updateStageClass, resetCard, toggleVisibility } from './ui.js';
+import { updateCard, updateStatusClass, updateStageClass } from './ui.js';
+import { resetCard, toggleVisibility } from './utilities.js'; // Correct import from utilities.js
 
 document.addEventListener('DOMContentLoaded', function() {
     Missive.on('change:conversations', (ids) => {
@@ -10,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             const conversationId = conversations[0].id;
+            let currentConversationId = null;
             if (currentConversationId === conversationId) return;
             currentConversationId = conversationId;
             resetCard();
