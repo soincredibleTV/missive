@@ -42,7 +42,7 @@ export async function updateSmartSuiteField(recordId, fieldName, value) {
             body: JSON.stringify(data)
         });
         if (!response.ok) {
-            throw new Error(\`HTTP error! Status: \${response.status}\`);
+            throw new Error(\`HTTP error! Status: \${response.status}\);
         }
         return await response.json();
     } catch (error) {
