@@ -21,11 +21,32 @@ export async function callGoogleFunction(endpoint, method, data) {
             body: JSON.stringify({ endpoint, method, data })
         });
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            throw new Error(\`HTTP error! Status: \${response.status}\`);
         }
         return await response.json();
     } catch (error) {
         console.error('Error during API call:', error);
+        throw error;
+    }
+}
+
+export async function updateSmartSuiteField(recordId, fieldName, value) {
+    const endpoint = \`https://us-central1-missive-ss-integration.cloudfunctions.net/smartSuiteProxy/api/v1/updateRecord/\${recordId}\`;
+    const method = 'PATCH';
+    const data = { [fieldName]: value };
+
+    try {
+        const response = await fetch(endpoint, {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        if (!response.ok) {
+            throw new Error(\`HTTP error! Status: \${response.status}\`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error updating field:', error);
         throw error;
     }
 }
