@@ -21,7 +21,7 @@ export async function callGoogleFunction(endpoint, method, data) {
             body: JSON.stringify({ endpoint, method, data })
         });
         if (!response.ok) {
-            throw new Error(\`HTTP error! Status: ${response.status}\`);
+            throw new Error(`HTTP error! Status: ${response.status}\`);
         }
         return await response.json();
     } catch (error) {
