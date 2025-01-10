@@ -1,5 +1,4 @@
-
-function resetCard() {
+export function resetCard() {
     const title = document.getElementById('card-title');
     const status = document.getElementById('card-status');
     const stage = document.getElementById('card-stage');
@@ -14,5 +13,16 @@ function resetCard() {
         linkButton.href = '#';
     } else {
         console.error('resetCard: Elements not found!');
+    }
+}
+
+export function toggleVisibility(visible) {
+    const card = document.getElementById('data-card');
+    const noRecords = document.getElementById('no-records');
+    if (card && noRecords) {
+        card.style.display = visible ? 'block' : 'none';
+        noRecords.style.display = visible ? 'none' : 'block';
+    } else {
+        console.error('toggleVisibility: Elements not found!');
     }
 }
