@@ -1,3 +1,5 @@
+import { fetchFromGoogleCloud, callGoogleFunction } from './core.js';
+import { updateCard, updateStatusClass, updateStageClass } from './ui.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('card-status').addEventListener('change', (event) => {
