@@ -1,4 +1,3 @@
-
 let currentConversationId = null;
 let currentRecordId = null;
 let currentChecklist = null;
@@ -120,30 +119,40 @@ function updateCard(item) {
         linkButton.href = item.s3e0bfef87 || '#';
     }
     const tasksElement = document.getElementById('card-tasks');
-    if (tasksElement) {
-        tasksElement.innerHTML = '';
-
-        (item.s7ea226547?.items || []).forEach(task => {
-            const li = document.createElement('li');
-            li.innerHTML = '<input type="checkbox" data-task-id="' + task.id + '" ' + (task.completed ? 'checked' : '') + '> <span>' + task.content.preview + '</span>';
-            tasksElement.appendChild(li);
-
-            li.querySelector('input').addEventListener('change', (event) => {
-                updateChecklistField(task.id, event.target.checked);
-            });
+    tasksElement.innerHTML = '';
+    item.s7ea226547?.items.forEach(task => {
+        const li = document.createElement('li');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = task.completed;
+        checkbox.dataset.taskId = task.id;
+        checkbox.addEventListener('change', (event) => {
+            updateChecklistField(task.id, event.target.checked);
         });
-    }
+        const span = document.createElement('span');
+        span.textContent = task.content.preview;
+        li.appendChild(checkbox);
+        li.appendChild(span);
+        tasksElement.appendChild(li);
+    });
+    // Update completed_items count
+    item.s7ea226547.completed_items = item.s7ea226547.items.filter(i => i.completed)..length;
 }
 
 async function updateChecklistField(taskId, newCompletedStatus) {
+    const now = new Date().toISOString();
+    currentChecklist.items = currentChecklist.items.map(item => {
+        if (item.id === taskId) {
+            return { ...item, completed: newCompletedStatus, completed_at: newCompletedStatus ? now : null };
+        }
+        return item;
+    });
+    currentChecklist.completed_items = currentChecklist.items.filter(item => item.completed).length;
+    const updatedChecklist = { ...currentChecklist };
+    const endpoint = '/api/v1/applications/64bea2c89335ca76865eedef/records/${currentRecordId}';
+    const method = 'PATCH';
+    const data = { recordId: currentRecordId, fields: { s7ea226547: updatedChecklist } };
     try {
-        currentChecklist.items = currentChecklist.items.map(item =>
-            item.id === taskId ? { ...item, completed: newCompletedStatus } : item
-        );
-        const updatedChecklist = { ...currentChecklist };
-        const endpoint = '/api/v1/applications/64bea2c89335ca76865eedef/records/updateChecklist';
-        const method = 'PATCH';
-        const data = { recordId: currentRecordId, fields: { s7ea226547: updatedChecklist } };
         await callGoogleFunction(endpoint, method, data);
         console.log('Checklist updated for task ' + taskId);
     } catch (error) {
