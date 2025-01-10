@@ -136,7 +136,7 @@ function updateCard(item) {
         tasksElement.appendChild(li);
     });
     // Update completed_items count
-    item.s7ea226547.completed_items = item.s7ea226547.items.filter(i => i.completed)..length;
+    item.s7ea226547.completed_items = item.s7ea226547.items.filter(i => i.completed).length;
 }
 
 async function updateChecklistField(taskId, newCompletedStatus) {
