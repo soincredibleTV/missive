@@ -1,9 +1,9 @@
 import { fetchFromGoogleCloud } from './core.js';
-import { resetCard, toggleVisibility } from './utilities.js';
+import { resetCard, toggleVisibility, updateSmartSuiteField, updateStatusClass, updateStageClass } from './utilities.js'; // Including additional functions
 
 let currentConversationId = null;  // Properly scoped within the module
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     Missive.on('change:conversations', (ids) => {
         Missive.fetchConversations(ids).then((conversations) => {
             if (conversations.length !== 1) {
@@ -12,28 +12,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             const conversationId = conversations[0].id;
-            console.log("Current Conversation ID:", conversationId);  // Adding console log for debugging
+            console.log("Conversation ID:", conversationId);
             if (currentConversationId === conversationId) return;
             currentConversationId = conversationId;
             resetCard();
             toggleVisibility(true);
-            fetchFromGoogleCloud(conversationId);  // Ensure this function is correctly called with conversationId
+            fetchFromGoogleCloud(conversationId);
         });
     });
 
     document.getElementById('card-status').addEventListener('change', (event) => {
         const newValue = event.target.value;
-        // Assuming updateSmartSuiteField is defined elsewhere and relevant
-        updateSmartSuiteField(currentRecordId, 'sb2ebbc694', newValue);
-        // Assuming updateStatusClass is defined elsewhere and relevant
+        updateSmartSuiteField(currentConversationId, 'sb2ebbc694', newValue);
         updateStatusClass(event.target.options[event.target.selectedIndex].className);
     });
 
     document.getElementById('card-stage').addEventListener('change', (event) => {
         const newValue = event.target.value;
-        // Assuming updateSmartSuiteField is defined elsewhere and relevant
-        updateSmartSuiteField(currentRecordId, 'status', newValue);
-        // Assuming updateStageClass is defined elsewhere and relevant
+        updateSmartSuiteField(currentConversationId, 'status', newValue);
         updateStageClass(event.target.options[event.target.selectedIndex].className);
     });
 });
