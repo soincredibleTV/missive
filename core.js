@@ -1,5 +1,4 @@
-
-async function callGoogleFunction(endpoint, method, data) {
+export async function callGoogleFunction(endpoint, method, data) {
     try {
         const response = await fetch('https://us-central1-missive-ss-integration.cloudfunctions.net/smartSuiteProxy', {
             method: 'POST',
@@ -16,4 +15,12 @@ async function callGoogleFunction(endpoint, method, data) {
         console.error('Error during API call: ' + error.message);
         throw error;
     }
+}
+
+export async function fetchFromGoogleCloud(conversationId) {
+    const endpoint = '/api/v1/applications/64bea2c89335ca76865eedef/records/list/';
+    const method = 'POST';
+    const data = { limit: 2 };
+    const result = await callGoogleFunction(endpoint, method, { ...data, filter: { missiveId: conversationId } });
+    return result;
 }
