@@ -121,8 +121,7 @@ select.stage option.invoice_paid { background_color: #D1C4E9; } /* Invoice Paid 
     padding: 0;
 }
 .tasks li {
-    display: flex;
-    align-items: center;
+    align-items: left;
     margin-bottom: 5px;
 }
 .tasks li input {
