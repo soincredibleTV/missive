@@ -115,7 +115,7 @@ item.s7ea226547?.items.forEach(task => {
             console.error('Failed to update task: ', error);
             currentChecklist = previousChecklist; // Восстанавливаем предыдущее состояние в случае ошибки
         }
-    }); // Закрываем addEventListener
+    });
     const span = document.createElement('span');
     span.textContent = task.content.preview;
     li.appendChild(checkbox);
