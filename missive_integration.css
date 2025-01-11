@@ -117,33 +117,48 @@ select.stage option.invoice_sent { background-color: #007BFF; } /* Invoice Sent 
 select.stage option.invoice_paid { background_color: #D1C4E9; } /* Invoice Paid */
 
 .tasks {
-    list-style: none;
-    padding: 0;
+    list-style: none; /* Убираем стандартные маркеры списка */
+    padding: 0; /* Убираем стандартные отступы */
 }
+
 .tasks li {
-    align-items: left;
-    margin-bottom: 5px;
+    display: flex;
+    align-items: flex-start; /* Выравниваем элементы в списке по верху */
+    margin-bottom: 5px; /* Отступ между элементами списка */
 }
+
+.tasks li::before {
+    content: "•"; /* Добавляем буллет в виде символа */
+    color: black; /* Цвет буллета */
+    font-size: 20px; /* Размер буллета */
+    padding-right: 10px; /* Отступ от буллета до текста */
+    margin-top: auto; /* Центрируем буллет по вертикали */
+    margin-bottom: auto; /* Центрируем буллет по вертикали */
+}
+
 .tasks li input {
-    margin-right: 10px;
+    margin-right: 10px; /* Отступ справа от чекбокса */
 }
+
 .tasks li span {
-    font-size: 14px;
+    font-size: 14px; /* Размер шрифта текста в списке */
 }
+
 .no-records {
-    font-size: 18px;
-    color: #007bff;
-    text-align: center;
-    margin-top: 20px;
+    font-size: 18px; /* Размер шрифта сообщения об отсутствии записей */
+    color: #007bff; /* Цвет текста */
+    text-align: center; /* Выравнивание текста по центру */
+    margin-top: 20px; /* Верхний отступ */
 }
+
 .tech-details {
-    width: 100%;
-    max-width: 800px;
-    background-color: #f4f4f4;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
-    max-height: 300px;
-    overflow-y: auto;
-    margin-top: 20px;
+    width: 100%; /* Ширина блока */
+    max-width: 800px; /* Максимальная ширина блока */
+    background-color: #f4f4f4; /* Цвет фона */
+    border: 1px solid #ddd; /* Рамка вокруг блока */
+    border-radius: 5px; /* Скругление углов рамки */
+    padding: 10px; /* Внутренний отступ блока */
+    max-height: 300px; /* Максимальная высота блока */
+    overflow-y: auto; /* Добавляем вертикальную прокрутку, если контент не помещается */
+    margin-top: 20px; /* Верхний отступ */
 }
