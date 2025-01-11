@@ -88,35 +88,40 @@ function updateCard(item) {
     }
     const tasksElement = document.getElementById('card-tasks');
     tasksElement.innerHTML = '';
-    item.s7ea226547?.items.forEach(task => {
-        const li = document.createElement('li');
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = task.completed;
-        checkbox.dataset.taskId = task.id;
-        checkbox.addEventListener('change', async (event) => {
-    const checkbox = event.target;
-    const taskId = checkbox.dataset.taskId;
-    const newCompletedStatus = checkbox.checked;
-    const previousChecklist = { ...currentChecklist };
-    const now = new Date().toISOString();
-    currentChecklist.items = currentChecklist.items.map(item => {
-        if (item.id === taskId) {
-            return { ...item, completed: newCompletedStatus, completed_at: newCompletedStatus ? now : null };
-        }
-        return item;
-    });
-    currentChecklist.completed_items = currentChecklist.items.filter(item => item.completed).length;
+item.s7ea226547?.items.forEach(task => {
+    const li = document.createElement('li');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = task.completed;
+    checkbox.dataset.taskId = task.id;
+    checkbox.addEventListener('change', async (event) => {
+        const checkbox = event.target;
+        const taskId = checkbox.dataset.taskId;
+        const newCompletedStatus = checkbox.checked;
+        const previousChecklist = { ...currentChecklist }; // Копируем текущее состояние чеклиста
+        const now = new Date().toISOString();
+        currentChecklist.items = currentChecklist.items.map(item => {
+            if (item.id === taskId) {
+                return { ...item, completed: newCompletedStatus, completed_at: newCompletedStatus ? now : null };
+            }
+            return item;
+        });
+        currentChecklist.completed_items = currentChecklist.items.filter(item => item.completed).length;
 
-    try {
-        await updateChecklistField(currentChecklist, currentRecordId, taskId, newCompletedStatus);
-        console.log('Checklist updated for task ' + taskId);
-    } catch (error) {
-        console.error('Failed to update task: ', error);
-        currentChecklist = previousChecklist; 
-    }
+        try {
+            await updateChecklistField(currentChecklist, currentRecordId, taskId, newCompletedStatus);
+            console.log('Checklist updated for task ' + taskId);
+        } catch (error) {
+            console.error('Failed to update task: ', error);
+            currentChecklist = previousChecklist; // Восстанавливаем предыдущее состояние в случае ошибки
+        }
+    }); // Закрываем addEventListener
+    const span = document.createElement('span');
+    span.textContent = task.content.preview;
+    li.appendChild(checkbox);
+    li.appendChild(span);
+    tasksElement.appendChild(li);
 });
-}
 
 document.addEventListener('DOMContentLoaded', function() {
     Missive.on('change:conversations', (ids) => {
