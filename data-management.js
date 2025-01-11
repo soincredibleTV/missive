@@ -98,6 +98,7 @@ function updateCard(item) {
     const newCompletedStatus = event.target.checked;
     const taskId = task.id;
 
+    // Оптимистическое обновление
     const previousChecklist = { ...currentChecklist }; // Сохраняем предыдущее состояние
     const now = new Date().toISOString();
     currentChecklist.items = currentChecklist.items.map(item => {
@@ -107,10 +108,13 @@ function updateCard(item) {
         return item;
     });
     currentChecklist.completed_items = currentChecklist.items.filter(item => item.completed).length;
+
     try {
+        // Отправка обновленного состояния на сервер
         await updateChecklistField(currentChecklist, currentRecordId, taskId, newCompletedStatus);
         console.log('Checklist updated for task ' + taskId);
     } catch (error) {
+        // Откат к предыдущему состоянию при ошибке
         console.error('Failed to update task: ', error);
         currentChecklist = previousChecklist;
     }
