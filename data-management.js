@@ -152,5 +152,5 @@ document.addEventListener('DOMContentLoaded', function() {
         updateStageClass(event.target.options[event.target.selectedIndex].className);
     });
 });
-
+}
 export { resetCard, toggleVisibility, updateStatusClass, updateStageClass, fetchFromGoogleCloud, updateCard };
