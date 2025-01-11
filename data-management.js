@@ -88,7 +88,7 @@ function updateCard(item) {
     }
     const tasksElement = document.getElementById('card-tasks');
     tasksElement.innerHTML = '';
-item.s7ea226547?.items.forEach(task => {
+    item.s7ea226547?.items.forEach(task => {
     const li = document.createElement('li');
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
@@ -98,7 +98,7 @@ item.s7ea226547?.items.forEach(task => {
         const checkbox = event.target;
         const taskId = checkbox.dataset.taskId;
         const newCompletedStatus = checkbox.checked;
-        const previousChecklist = { ...currentChecklist }; // Копируем текущее состояние чеклиста
+        const previousChecklist = { ...currentChecklist };
         const now = new Date().toISOString();
         currentChecklist.items = currentChecklist.items.map(item => {
             if (item.id === taskId) {
@@ -113,7 +113,7 @@ item.s7ea226547?.items.forEach(task => {
             console.log('Checklist updated for task ' + taskId);
         } catch (error) {
             console.error('Failed to update task: ', error);
-            currentChecklist = previousChecklist; // Восстанавливаем предыдущее состояние в случае ошибки
+            currentChecklist = previousChecklist;
         }
     });
     const span = document.createElement('span');
@@ -122,7 +122,7 @@ item.s7ea226547?.items.forEach(task => {
     li.appendChild(span);
     tasksElement.appendChild(li);
 });
-
+}
 document.addEventListener('DOMContentLoaded', function() {
     Missive.on('change:conversations', (ids) => {
         Missive.fetchConversations(ids).then((conversations) => {
@@ -152,5 +152,5 @@ document.addEventListener('DOMContentLoaded', function() {
         updateStageClass(event.target.options[event.target.selectedIndex].className);
     });
 });
-}
+
 export { resetCard, toggleVisibility, updateStatusClass, updateStageClass, fetchFromGoogleCloud, updateCard };
