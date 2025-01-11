@@ -117,30 +117,40 @@ select.stage option.invoice_sent { background-color: #007BFF; } /* Invoice Sent 
 select.stage option.invoice_paid { background_color: #D1C4E9; } /* Invoice Paid */
 
 .tasks {
-    list-style: none; /* Убираем маркеры у основного списка */
-    padding: 0; /* Убираем отступы у основного списка */
+    list-style: none;
+    padding-left: 0;
 }
 
+/* Стили для элементов списка задач */
 .tasks li {
     display: flex;
     align-items: flex-start;
     margin-bottom: 5px;
-}
-
-/* Восстанавливаем стандартные маркеры только для вложенных списков */
-.tasks li span ul {
-    list-style-type: disc; /* Стандартные дисковые маркеры */
-    padding-left: 20px; /* Восстанавливаем отступ для маркеров */
+    text-align: left; /* Выравнивание текста по левому краю */
 }
 
 .tasks li input {
     margin-right: 10px;
 }
 
+/* Стили для вложенного списка внутри элементов списка задач */
+.tasks li span ul {
+    list-style-type: disc; /* Восстановление буллетов */
+    padding-left: 20px; /* Отступ для буллетов */
+}
+
+.tasks li span ul li {
+    display: list-item; /* Позволяет буллетам отображаться корректно */
+    align-items: inherit; /* Унаследует выравнивание, если потребуется */
+}
 .tasks li span {
-    font-size: 14px;
-    display: block; /* Гарантируем, что span занимает всю ширину */
-    width: 100%;
+    text-align: left; /* Убеждаемся, что текст в span тоже выровнен по левому краю */
+    display: block; /* Устанавливаем span как блочный элемент, если это необходимо */
+    width: 100%; /* Занимает всю доступную ширину для корректного выравнивания текста */
+}
+
+.tasks li p, .tasks li span p {
+    text-align: left; /* Выравнивание текста по левому краю для параграфов */
 }
 
 .no-records {
@@ -161,5 +171,6 @@ select.stage option.invoice_paid { background_color: #D1C4E9; } /* Invoice Paid 
     overflow-y: auto;
     margin-top: 20px;
 }
+
 
 
