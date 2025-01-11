@@ -48,6 +48,7 @@ body {
     text-transform: uppercase;
     color: #666;
     margin-bottom: 5px;
+    text-align: left;
 }
 .status, .stage {
     position: relative;
