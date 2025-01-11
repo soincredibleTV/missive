@@ -95,7 +95,7 @@ function updateCard(item) {
         checkbox.checked = task.completed;
         checkbox.dataset.taskId = task.id;
         checkbox.addEventListener('change', (event) => {
-            updateChecklistField(currentChecklist, task.id, event.target.checked);
+            updateChecklistField(currentChecklist, currentRecordId, task.id, event.target.checked);
         });
         const span = document.createElement('span');
         span.textContent = task.content.preview;
