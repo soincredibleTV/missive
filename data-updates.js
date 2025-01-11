@@ -17,7 +17,7 @@ async function callGoogleFunction(endpoint, method, data) {
     }
 }
 
-async function updateChecklistField(currentChecklist, taskId, newCompletedStatus) {
+async function updateChecklistField(currentChecklist, currentRecordId, taskId, newCompletedStatus) {
     const now = new Date().toISOString();
     let updatedChecklist = { ...currentChecklist };
     updatedChecklist.items = updatedChecklist.items.map(item => {
