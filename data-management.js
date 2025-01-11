@@ -95,19 +95,26 @@ function updateCard(item) {
         checkbox.checked = task.completed;
         checkbox.dataset.taskId = task.id;
         checkbox.addEventListener('change', async (event) => {
+    const newCompletedStatus = event.target.checked;
+    const taskId = task.id;
+
+    const previousChecklist = { ...currentChecklist }; // Сохраняем предыдущее состояние
+    const now = new Date().toISOString();
+    currentChecklist.items = currentChecklist.items.map(item => {
+        if (item.id === taskId) {
+            return { ...item, completed: newCompletedStatus, completed_at: newCompletedStatus ? now : null };
+        }
+        return item;
+    });
+    currentChecklist.completed_items = currentChecklist.items.filter(item => item.completed).length;
     try {
-        const updatedChecklist = await updateChecklistField(currentChecklist, currentRecordId, task.id, event.target.checked);
-        currentChecklist = updatedChecklist; 
+        await updateChecklistField(currentChecklist, currentRecordId, taskId, newCompletedStatus);
+        console.log('Checklist updated for task ' + taskId);
     } catch (error) {
         console.error('Failed to update task: ', error);
+        currentChecklist = previousChecklist;
     }
 });
-        const span = document.createElement('span');
-        span.textContent = task.content.preview;
-        li.appendChild(checkbox);
-        li.appendChild(span);
-        tasksElement.appendChild(li);
-    });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
