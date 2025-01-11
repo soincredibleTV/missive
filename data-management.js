@@ -117,7 +117,7 @@ function updateCard(item) {
         }
     });
     const span = document.createElement('span');
-    span.textContent = task.content.preview;
+    span.innerHTML = task.content.preview;
     li.appendChild(checkbox);
     li.appendChild(span);
     tasksElement.appendChild(li);
