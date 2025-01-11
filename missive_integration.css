@@ -120,7 +120,7 @@ select.stage option.invoice_paid { background_color: #D1C4E9; } /* Invoice Paid 
 
 .card-deliverables {
     background-color: #f4f4f4; /* Светло-серый фон */
-    border: 1px solid #ddd; /* Светло-серая тонкая граница */
+    border-radius: 5px;
     padding: 15px; /* Отступы внутри блока */
     font-family: Arial, sans-serif; /* Шрифт для единообразия */
     color: #333; /* Темно-серый цвет текста */
@@ -129,6 +129,7 @@ select.stage option.invoice_paid { background_color: #D1C4E9; } /* Invoice Paid 
     width: 100%; /* Ширина равна ширине родительского элемента */
     box-sizing: border-box; /* Убедимся, что padding и border включены в ширину */
     margin-bottom: 20px; /* Отступ снизу для разделения секций */
+    text-align: left;
 }
 
 .tasks {
