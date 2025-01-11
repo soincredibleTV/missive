@@ -127,15 +127,6 @@ select.stage option.invoice_paid { background_color: #D1C4E9; } /* Invoice Paid 
     margin-bottom: 5px; /* Отступ между элементами списка */
 }
 
-.tasks li::before {
-    content: "•"; /* Добавляем буллет в виде символа */
-    color: black; /* Цвет буллета */
-    font-size: 20px; /* Размер буллета */
-    padding-right: 10px; /* Отступ от буллета до текста */
-    margin-top: auto; /* Центрируем буллет по вертикали */
-    margin-bottom: auto; /* Центрируем буллет по вертикали */
-}
-
 .tasks li input {
     margin-right: 10px; /* Отступ справа от чекбокса */
 }
@@ -162,3 +153,4 @@ select.stage option.invoice_paid { background_color: #D1C4E9; } /* Invoice Paid 
     overflow-y: auto; /* Добавляем вертикальную прокрутку, если контент не помещается */
     margin-top: 20px; /* Верхний отступ */
 }
+
