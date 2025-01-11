@@ -1,3 +1,5 @@
+// data-management.js
+
 import { callGoogleFunction, updateChecklistField, updateSmartSuiteField } from './data-updates.js';
 
 let currentConversationId = null;
@@ -84,7 +86,6 @@ function updateCard(item) {
     if (linkButton) {
         linkButton.style.display = 'inline-block';
         linkButton.href = item.s3e0bfef87 || '#';
-        // Ensure it's treated as HTML
         linkButton.innerHTML = '<span>Open in SmartSuite</span>';
     }
     const tasksElement = document.getElementById('card-tasks');
@@ -96,7 +97,7 @@ function updateCard(item) {
         checkbox.checked = task.completed;
         checkbox.dataset.taskId = task.id;
         checkbox.addEventListener('change', (event) => {
-            updateChecklistField(task.id, event.target.checked);
+            updateChecklistField(currentChecklist, task.id, event.target.checked);
         });
         const span = document.createElement('span');
         span.textContent = task.content.preview;
@@ -104,8 +105,6 @@ function updateCard(item) {
         li.appendChild(span);
         tasksElement.appendChild(li);
     });
-    // Update completed_items count
-    item.s7ea226547.completed_items = item.s7ea226547.items.filter(i => i.completed).length;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
