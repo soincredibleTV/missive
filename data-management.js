@@ -1,5 +1,3 @@
-// data-management.js
-
 import { callGoogleFunction, updateChecklistField, updateSmartSuiteField } from './data-updates.js';
 
 let currentConversationId = null;
