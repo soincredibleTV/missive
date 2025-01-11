@@ -31,11 +31,12 @@ async function updateChecklistField(currentChecklist, currentRecordId, taskId, n
     const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${currentRecordId}`;
     const method = 'PATCH';
     const data = { recordId: currentRecordId, fields: { s7ea226547: updatedChecklist } };
-    try {
-        await callGoogleFunction(endpoint, method, data);
+    const response = await callGoogleFunction(endpoint, method, data);
+    if (response.ok) {
         console.log('Checklist updated for task ' + taskId);
-    } catch (error) {
-        console.error('Error updating checklist: ' + error.message);
+        return updatedChecklist;
+    } else {
+        throw new Error('Failed to update checklist');
     }
 }
 
