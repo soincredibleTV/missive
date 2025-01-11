@@ -18,19 +18,9 @@ async function callGoogleFunction(endpoint, method, data) {
 }
 
 async function updateChecklistField(currentChecklist, currentRecordId, taskId, newCompletedStatus) {
-    const now = new Date().toISOString();
-    let updatedChecklist = { ...currentChecklist };
-    updatedChecklist.items = updatedChecklist.items.map(item => {
-        if (item.id === taskId) {
-            return { ...item, completed: newCompletedStatus, completed_at: newCompletedStatus ? now : null };
-        }
-        return item;
-    });
-    updatedChecklist.completed_items = updatedChecklist.items.filter(item => item.completed).length;
-
     const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${currentRecordId}`;
     const method = 'PATCH';
-    const data = { recordId: currentRecordId, fields: { s7ea226547: updatedChecklist } };
+    const data = { recordId: currentRecordId, fields: { s7ea226547: currentChecklist } };
 
     const response = await fetch('https://us-central1-missive-ss-integration.cloudfunctions.net/smartSuiteProxy', {
         method: 'POST',
@@ -40,12 +30,10 @@ async function updateChecklistField(currentChecklist, currentRecordId, taskId, n
         body: JSON.stringify({ endpoint, method, data })
     });
 
-    if (response.ok) {
-        console.log('Checklist updated for task ' + taskId);
-        return updatedChecklist; 
-    } else {
+    if (!response.ok) {
         throw new Error('Failed to update checklist, HTTP status: ' + response.status);
     }
+    return response.json(); // Возвращаем ответ сервера для возможной дальнейшей обработки
 }
 
 async function updateSmartSuiteField(recordId, fieldId, newValue) {
