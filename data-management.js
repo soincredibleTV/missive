@@ -94,9 +94,14 @@ function updateCard(item) {
         checkbox.type = 'checkbox';
         checkbox.checked = task.completed;
         checkbox.dataset.taskId = task.id;
-        checkbox.addEventListener('change', (event) => {
-            updateChecklistField(currentChecklist, currentRecordId, task.id, event.target.checked);
-        });
+        checkbox.addEventListener('change', async (event) => {
+    try {
+        const updatedChecklist = await updateChecklistField(currentChecklist, currentRecordId, task.id, event.target.checked);
+        currentChecklist = updatedChecklist; 
+    } catch (error) {
+        console.error('Failed to update task: ', error);
+    }
+});
         const span = document.createElement('span');
         span.textContent = task.content.preview;
         li.appendChild(checkbox);
