@@ -116,43 +116,50 @@ select.stage option.completed { background-color: #26A69A; } /* Completed */
 select.stage option.invoice_sent { background-color: #007BFF; } /* Invoice Sent */
 select.stage option.invoice_paid { background_color: #D1C4E9; } /* Invoice Paid */
 
-.tasks ul {
-    list-style-type: disc; /* Восстанавливаем дисковые маркеры для вложенных списков */
-    padding-left: 20px; /* Добавляем отступ слева для маркеров */
+.tasks {
+    list-style: none; /* Убираем маркеры у основного списка */
+    padding: 0; /* Убираем отступы у основного списка */
 }
 
 .tasks li {
     display: flex;
-    align-items: flex-start; /* Выравниваем элементы в списке по верху */
-    margin-bottom: 5px; /* Отступ между элементами списка */
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+
+/* Восстанавливаем стандартные маркеры только для вложенных списков */
+.tasks li span ul {
+    list-style-type: disc; /* Стандартные дисковые маркеры */
+    padding-left: 20px; /* Восстанавливаем отступ для маркеров */
 }
 
 .tasks li input {
-    margin-right: 10px; /* Отступ справа от чекбокса */
+    margin-right: 10px;
 }
 
 .tasks li span {
-    font-size: 14px; /* Размер шрифта текста в списке */
-    width: 100%; /* Задаем ширину для span, чтобы текст не обтекал чекбокс */
+    font-size: 14px;
+    display: block; /* Гарантируем, что span занимает всю ширину */
+    width: 100%;
 }
 
 .no-records {
-    font-size: 18px; /* Размер шрифта сообщения об отсутствии записей */
-    color: #007bff; /* Цвет текста */
-    text-align: center; /* Выравнивание текста по центру */
-    margin-top: 20px; /* Верхний отступ */
+    font-size: 18px;
+    color: #007bff;
+    text-align: center;
+    margin-top: 20px;
 }
 
 .tech-details {
-    width: 100%; /* Ширина блока */
-    max-width: 800px; /* Максимальная ширина блока */
-    background-color: #f4f4f4; /* Цвет фона */
-    border: 1px solid #ddd; /* Рамка вокруг блока */
-    border-radius: 5px; /* Скругление углов рамки */
-    padding: 10px; /* Внутренний отступ блока */
-    max-height: 300px; /* Максимальная высота блока */
-    overflow-y: auto; /* Добавляем вертикальную прокрутку, если контент не помещается */
-    margin-top: 20px; /* Верхний отступ */
+    width: 100%;
+    max-width: 800px;
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 20px;
 }
 
 
