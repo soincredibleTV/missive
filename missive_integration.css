@@ -118,7 +118,7 @@ select.stage option.completed { background-color: #26A69A; } /* Completed */
 select.stage option.invoice_sent { background-color: #007BFF; } /* Invoice Sent */
 select.stage option.invoice_paid { background_color: #D1C4E9; } /* Invoice Paid */
 
-.final-deliverables {
+.card-deliverables {
     background-color: #f4f4f4; /* Светло-серый фон */
     border: 1px solid #ddd; /* Светло-серая тонкая граница */
     padding: 15px; /* Отступы внутри блока */
