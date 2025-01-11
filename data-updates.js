@@ -17,16 +17,17 @@ async function callGoogleFunction(endpoint, method, data) {
     }
 }
 
-async function updateChecklistField(taskId, newCompletedStatus) {
+async function updateChecklistField(currentChecklist, taskId, newCompletedStatus) {
     const now = new Date().toISOString();
-    currentChecklist.items = currentChecklist.items.map(item => {
+    let updatedChecklist = { ...currentChecklist };
+    updatedChecklist.items = updatedChecklist.items.map(item => {
         if (item.id === taskId) {
             return { ...item, completed: newCompletedStatus, completed_at: newCompletedStatus ? now : null };
         }
         return item;
     });
-    currentChecklist.completed_items = currentChecklist.items.filter(item => item.completed).length;
-    const updatedChecklist = { ...currentChecklist };
+    updatedChecklist.completed_items = updatedChecklist.items.filter(item => item.completed).length;
+
     const endpoint = `/api/v1/applications/64bea2c89335ca76865eedef/records/${currentRecordId}`;
     const method = 'PATCH';
     const data = { recordId: currentRecordId, fields: { s7ea226547: updatedChecklist } };
