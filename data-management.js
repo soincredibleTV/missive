@@ -71,7 +71,8 @@ function updateCard(item) {
     const statusElement = document.getElementById('card-status');
     const stageElement = document.getElementById('card-stage');
     const linkButton = document.getElementById('card-link-button');
-    const deliverablesElement = document.getElementById('card-deliverables'); // Добавлен новый элемент для Deliverables
+    const dealTalentLink = document.getElementById('deal-talent-link');
+    const deliverablesElement = document.getElementById('card-deliverables'); 
 
     if (titleElement) titleElement.textContent = item.s78ba1a556 || 'No Title';
     if (statusElement) {
@@ -86,6 +87,11 @@ function updateCard(item) {
         linkButton.style.display = 'inline-block';
         linkButton.href = item.s3e0bfef87 || '#';
         linkButton.innerHTML = '<span>Open in SmartSuite</span>';
+    }
+    if (dealTalentLink && item.s08idf3s) {
+        dealTalentLink.href = `https://app.smartsuite.com/sg1uylnz/solution/64bea2c89335ca76865eede2/64c78e3dbca0f13bc0c74d02/677c4c18bbf5c33572a47406?editRecord=${item.s08idf3s}`;
+        dealTalentLink.style.display = 'inline-block'; 
+        dealTalentLink.textContent = 'Open Deal Talent'; 
     }
     if (deliverablesElement) {
         deliverablesElement.textContent = item.sb331e5b68 || 'No Deliverables'; // Заполнение элемента Deliverables
