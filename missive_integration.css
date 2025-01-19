@@ -132,6 +132,7 @@ select.stage option.invoice_paid { background_color: #D1C4E9; } /* Invoice Paid 
     text-align: left;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    white-space: normal;
 }
 
 .tasks {
