@@ -72,7 +72,7 @@ function updateCard(item) {
     const stageElement = document.getElementById('card-stage');
     const linkButton = document.getElementById('card-link-button');
     const dealTalentLink = document.getElementById('deal-talent-link');
-    const deliverablesElement = document.getElementById('card-deliverables'); 
+    const deliverablesElement = document.getElementById('card-deliverables');
 
     if (titleElement) titleElement.textContent = item.s78ba1a556 || 'No Title';
     if (statusElement) {
@@ -94,7 +94,7 @@ function updateCard(item) {
         dealTalentLink.textContent = 'Open Deal Talent'; 
     }
     if (deliverablesElement) {
-        deliverablesElement.textContent = item.sb331e5b68 || 'No Deliverables'; // Заполнение элемента Deliverables
+        deliverablesElement.textContent = item.sb331e5b68 || 'No Deliverables';
     }
     const tasksElement = document.getElementById('card-tasks');
     tasksElement.innerHTML = '';
@@ -161,6 +161,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const newValue = event.target.value;
         updateSmartSuiteField(currentRecordId, 'status', newValue);
         updateStageClass(event.target.options[event.target.selectedIndex].className);
+    });
+
+    document.getElementById('refresh-button').addEventListener('click', function() {
+        resetCard();
+        toggleVisibility(true);
+        if (currentConversationId) {
+            fetchFromGoogleCloud(currentConversationId);
+        }
     });
 });
 
