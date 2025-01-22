@@ -143,31 +143,34 @@ select.stage option.invoice_paid { background_color: #D1C4E9; } /* Invoice Paid 
     display: flex;
     align-items: flex-start;
     margin-bottom: 5px;
-    text-align: left; /* Выравнивание текста по левому краю */
+    text-align: left; 
+    white-space: pre-wrap;
 }
 
 .tasks li input {
     margin-right: 10px;
 }
 
-/* Стили для вложенного списка внутри элементов списка задач */
+
 .tasks li span ul {
-    list-style-type: disc; /* Восстановление буллетов */
-    padding-left: 20px; /* Отступ для буллетов */
+    list-style-type: disc; 
+    padding-left: 20px; 
+    white-space: normal;
 }
 
 .tasks li span ul li {
-    display: list-item; /* Позволяет буллетам отображаться корректно */
-    align-items: inherit; /* Унаследует выравнивание, если потребуется */
+    display: list-item; 
+    align-items: inherit; 
+    white-space: normal;
 }
 .tasks li span {
-    text-align: left; /* Убеждаемся, что текст в span тоже выровнен по левому краю */
-    display: block; /* Устанавливаем span как блочный элемент, если это необходимо */
-    width: 100%; /* Занимает всю доступную ширину для корректного выравнивания текста */
+    text-align: left; 
+    display: block; 
+    width: 100%; 
 }
 
 .tasks li p, .tasks li span p {
-    text-align: left; /* Выравнивание текста по левому краю для параграфов */
+    text-align: left; 
 }
 
 .no-records {
