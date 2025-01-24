@@ -79,6 +79,8 @@ body {
 .status.won { background-color: #28a745; } /* Green */
 .status.lost { background-color: #fd7e14; } /* Orange */
 .status.issues { background-color: #dc3545; } /* Red */
+.status.test missive { background-color: #FFFFFF; } /* Red */
+
 
 .stage.outreach { background-color: #FFEDB3; } /* Outreach */
 .stage.new { background-color: #6c757d; } /* New */
@@ -93,6 +95,7 @@ body {
 .stage.invoice_sent { background-color: #007BFF; } /* Invoice Sent */
 .stage.invoice_paid { background_color: #D1C4E9; } /* Invoice Paid */
 
+
 select.status option, select.stage option {
     color: white;
     font-size: 16px;
@@ -104,6 +107,8 @@ select.status option.open { background-color: #6c757d; } /* Gray */
 select.status option.won { background-color: #28a745; } /* Green */
 select.status option.lost { background-color: #fd7e14; } /* Orange */
 select.status option.issues { background-color: #dc3545; } /* Red */
+select.status option.test missive { background_color: #FFFFFF; } /* test */
+
 
 select.stage option.outreach { background-color: #FFEDB3; } /* Outreach */
 select.stage option.new { background-color: #6c757d; } /* New */
@@ -117,6 +122,7 @@ select.stage option.working { background-color: #673AB7; } /* Being Worked On */
 select.stage option.completed { background-color: #26A69A; } /* Completed */
 select.stage option.invoice_sent { background-color: #007BFF; } /* Invoice Sent */
 select.stage option.invoice_paid { background_color: #D1C4E9; } /* Invoice Paid */
+
 
 .card-deliverables {
     background-color: #f4f4f4;
