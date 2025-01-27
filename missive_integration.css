@@ -93,7 +93,7 @@ body {
 .stage.working { background-color: #673AB7; } /* Being Worked On */
 .stage.completed { background-color: #26A69A; } /* Completed */
 .stage.invoice_sent { background-color: #007BFF; } /* Invoice Sent */
-.stage.invoice_paid { background_color: #8e46d2; } /* Invoice Paid */
+.stage.invoice_paid { background-color: #8e46d2; } /* Invoice Paid */
 
 
 select.status option, select.stage option {
@@ -120,7 +120,7 @@ select.stage option.ongoing { background-color: #5D4037; } /* Ongoing (?) */
 select.stage option.working { background-color: #673AB7; } /* Being Worked On */
 select.stage option.completed { background-color: #26A69A; } /* Completed */
 select.stage option.invoice_sent { background-color: #007BFF; } /* Invoice Sent */
-select.stage option.invoice_paid { background_color: #8e46d2; } /* Invoice Paid */
+select.stage option.invoice_paid { background-color: #8e46d2; } /* Invoice Paid */
 
 
 .card-deliverables {
