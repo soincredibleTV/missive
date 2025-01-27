@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
             linkButton.style.display = 'inline-block';
             linkButton.href = item.s3e0bfef87 || '#';
             // Ensure it's treated as HTML
-            linkButton.innerHTML = '<span>Open in SmartSuite</span>';
+            linkButton.innerHTML = '<span>Open Deal in SmartSuite</span>';
         }
         const tasksElement = document.getElementById('card-tasks');
         tasksElement.innerHTML = '';
