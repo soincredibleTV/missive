@@ -82,18 +82,18 @@ body {
 .status.issues { background-color: #dc3545; } /* Red */
 
 
-.stage.outreach { background-color: #FFEDB3; } /* Outreach */
+.stage.outreach { background-color: #fdad1a; } /* Outreach */
 .stage.new { background-color: #6c757d; } /* New */
 .stage.discovery { background-color: #00aaff; } /* Discovery Client */
 .stage.quote { background-color: #2C73D2; } /* Quote Sent */
 .stage.negotiating { background-color: #E64363; } /* Negotiating */
 .stage.offer { background-color: #FFC107; } /* Offer With Talent */
-.stage.contracting { background-color: #C8E6C9; } /* Contracting */
+.stage.contracting { background-color: #48b04a; } /* Contracting */
 .stage.ongoing { background-color: #5D4037; } /* Ongoing (?) */
 .stage.working { background-color: #673AB7; } /* Being Worked On */
 .stage.completed { background-color: #26A69A; } /* Completed */
 .stage.invoice_sent { background-color: #007BFF; } /* Invoice Sent */
-.stage.invoice_paid { background_color: #D1C4E9; } /* Invoice Paid */
+.stage.invoice_paid { background_color: #8e46d2; } /* Invoice Paid */
 
 
 select.status option, select.stage option {
@@ -109,18 +109,18 @@ select.status option.lost { background-color: #fd7e14; } /* Orange */
 select.status option.issues { background-color: #dc3545; } /* Red */
 
 
-select.stage option.outreach { background-color: #FFEDB3; } /* Outreach */
+select.stage option.outreach { background-color: #fdad1a; } /* Outreach */
 select.stage option.new { background-color: #6c757d; } /* New */
 select.stage option.discovery { background-color: #00aaff; } /* Discovery Client */
 select.stage option.quote { background-color: #2C73D2; } /* Quote Sent */
 select.stage option.negotiating { background-color: #E64363; } /* Negotiating */
 select.stage option.offer { background-color: #FFC107; } /* Offer With Talent */
-select.stage option.contracting { background-color: #C8E6C9; } /* Contracting */
+select.stage option.contracting { background-color: #48b04a; } /* Contracting */
 select.stage option.ongoing { background-color: #5D4037; } /* Ongoing (?) */
 select.stage option.working { background-color: #673AB7; } /* Being Worked On */
 select.stage option.completed { background-color: #26A69A; } /* Completed */
 select.stage option.invoice_sent { background-color: #007BFF; } /* Invoice Sent */
-select.stage option.invoice_paid { background_color: #D1C4E9; } /* Invoice Paid */
+select.stage option.invoice_paid { background_color: #8e46d2; } /* Invoice Paid */
 
 
 .card-deliverables {
