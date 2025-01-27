@@ -86,7 +86,7 @@ function updateCard(item) {
     if (linkButton) {
         linkButton.style.display = 'inline-block';
         linkButton.href = item.s3e0bfef87 || '#';
-        linkButton.innerHTML = '<span>Open Deal in SmartSuite ↝</span>';
+        linkButton.innerHTML = '<span>Open Deal in SmartSuite →☞⇲</span>';
     }
     if (dealTalentLink && item.s08idf3s) {
         dealTalentLink.href = `https://app.smartsuite.com/sg1uylnz/solution/64bea2c89335ca76865eede2/64c78e3dbca0f13bc0c74d02/677c4c18bbf5c33572a47406?editRecord=${item.s08idf3s}`;
